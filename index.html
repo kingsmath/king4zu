@@ -1,0 +1,2348 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5YW0T2C109"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-5YW0T2C109');
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>사주킹(사주 만세력 계산기)</title>
+  <!-- Google Fonts: Outfit & Noto Sans KR -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <!-- html2canvas CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    :root {
+      --bg-dark: #09090b;
+      --card-bg: rgba(20, 20, 25, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent: #a855f7;
+      --accent-glow: rgba(168, 85, 247, 0.4);
+      --text-main: #f4f4f5;
+      --text-muted: #a1a1aa;
+
+      /* Five Elements Colors (Premium Glassmorphic) */
+      --wood-color: #4ade80;
+      --wood-glow: rgba(74, 222, 128, 0.15);
+      --wood-border: rgba(74, 222, 128, 0.3);
+
+      --fire-color: #f87171;
+      --fire-glow: rgba(248, 113, 113, 0.15);
+      --fire-border: rgba(248, 113, 113, 0.3);
+
+      --earth-color: #fbbf24;
+      --earth-glow: rgba(251, 191, 36, 0.15);
+      --earth-border: rgba(251, 191, 36, 0.3);
+
+      --metal-color: #e4e4e7;
+      --metal-glow: rgba(228, 228, 231, 0.1);
+      --metal-border: rgba(228, 228, 231, 0.3);
+
+      --water-color: #60a5fa;
+      --water-glow: rgba(96, 165, 250, 0.15);
+      --water-border: rgba(96, 165, 250, 0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image:
+        radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.08) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      font-family: 'Outfit', 'Noto Sans KR', sans-serif;
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0;
+      margin-left: auto;
+      margin-right: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* Disclaimer & Warning Banners */
+    .disclaimer-banner {
+      background: rgba(168, 85, 247, 0.08);
+      border: 1px solid rgba(168, 85, 247, 0.15);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    .disclaimer-banner .icon {
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .info-banner {
+      background: rgba(168, 85, 247, 0.08);
+      border: 1px solid rgba(168, 85, 247, 0.15);
+      border-radius: 12px;
+      padding: 1.25rem;
+      color: var(--text-main);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    .info-banner h3 {
+      color: #d8b4fe;
+      margin-bottom: 0.5rem;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .info-banner ol {
+      padding-left: 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .info-banner ol li strong {
+      color: var(--text-main);
+    }
+
+    /* App Header */
+    header {
+      text-align: center;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .top-nav {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 0.5rem;
+    }
+
+    .nav-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .nav-link:hover {
+      color: var(--accent);
+      border-color: rgba(168, 85, 247, 0.4);
+      background: rgba(168, 85, 247, 0.08);
+      box-shadow: 0 0 15px rgba(168, 85, 247, 0.15);
+      transform: translateY(-1px);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #f472b6, #a855f7, #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.05em;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    /* Main Dashboard Layout */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 900px) {
+      .dashboard-grid {
+        grid-template-columns: 350px 1fr;
+      }
+    }
+
+    /* Card Wrapper */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .card:hover {
+      border-color: rgba(168, 85, 247, 0.2);
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-main);
+      border-left: 4px solid var(--accent);
+      padding-left: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Input Form Styles */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .input-row-three {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 0.5rem;
+    }
+
+    input,
+    select {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: var(--text-main);
+      padding: 0.75rem;
+      font-size: 0.9rem;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    select option {
+      background-color: #121214;
+      color: var(--text-main);
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--accent);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 10px rgba(168, 85, 247, 0.15);
+    }
+
+    .radio-group {
+      display: flex;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 0.25rem;
+    }
+
+    .radio-label {
+      flex: 1;
+      text-align: center;
+      padding: 0.5rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .radio-input {
+      display: none;
+    }
+
+    .radio-input:checked+.radio-label {
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+      box-shadow: 0 2px 10px rgba(168, 85, 247, 0.3);
+    }
+
+    .toggle-section {
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+    }
+
+    .toggle-row span {
+      color: var(--text-muted);
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255, 255, 255, 0.1);
+      transition: .3s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked+.slider {
+      background-color: var(--accent);
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(20px);
+    }
+
+    /* Primary CTA Button */
+    .btn {
+      background: linear-gradient(135deg, #a855f7, #7c3aed);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      padding: 0.9rem;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(168, 85, 247, 0.6);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn:disabled {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    /* Result Section */
+    .results-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* Bazi Grid (The 4 Pillars Card) */
+    .bazi-card-capture {
+      background: #111115;
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bazi-card-capture::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.03) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .bazi-meta {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 1.25rem;
+      font-size: 0.9rem;
+    }
+
+    @media (min-width: 600px) {
+      .bazi-meta {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .meta-item {
+      color: var(--text-muted);
+    }
+
+    .meta-item strong {
+      color: var(--text-main);
+    }
+
+    /* The Main Bazi Grid Layout */
+    .bazi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      margin: 1rem 0;
+    }
+
+    /* Bazi Grid Pillars */
+    .bazi-pillar {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      text-align: center;
+    }
+
+    .pillar-header {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.03);
+      padding: 0.4rem;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    /* Saju Cells (Stems & Branches) */
+    .bazi-cell {
+      border-radius: 12px;
+      padding: 1.25rem 0.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 0.25rem;
+      min-height: 140px;
+      transition: transform 0.2s ease;
+    }
+
+    .bazi-cell .hanja {
+      font-size: 2.25rem;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .bazi-cell .pronunciation {
+      font-size: 0.85rem;
+      font-weight: 500;
+      opacity: 0.8;
+    }
+
+    .bazi-cell .cell-sipsin {
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 0.15rem 0.5rem;
+      border-radius: 20px;
+      margin-top: 0.25rem;
+    }
+
+    /* Element Color Theme Rules */
+    .theme-wood {
+      background: var(--wood-glow);
+      border: 1px solid var(--wood-border);
+      color: var(--wood-color);
+      text-shadow: 0 0 8px rgba(74, 222, 128, 0.25);
+    }
+
+    .theme-fire {
+      background: var(--fire-glow);
+      border: 1px solid var(--fire-border);
+      color: var(--fire-color);
+      text-shadow: 0 0 8px rgba(248, 113, 113, 0.25);
+    }
+
+    .theme-earth {
+      background: var(--earth-glow);
+      border: 1px solid var(--earth-border);
+      color: var(--earth-color);
+      text-shadow: 0 0 8px rgba(251, 191, 36, 0.25);
+    }
+
+    .theme-metal {
+      background: var(--metal-glow);
+      border: 1px solid var(--metal-border);
+      color: var(--metal-color);
+      text-shadow: 0 0 8px rgba(228, 228, 231, 0.2);
+    }
+
+    .theme-water {
+      background: var(--water-glow);
+      border: 1px solid var(--water-border);
+      color: var(--water-color);
+      text-shadow: 0 0 8px rgba(96, 165, 250, 0.25);
+    }
+
+    .sipsin-top {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #c084fc;
+      margin-bottom: 0.25rem;
+      min-height: 1.25rem;
+    }
+
+    .sibiunseong-bottom {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #38bdf8;
+      margin-top: 0.25rem;
+      min-height: 1.25rem;
+    }
+
+    .sinsal-box {
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin: 0.2rem 0;
+      min-height: 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.2rem;
+    }
+
+    .sinsal-tag {
+      background: rgba(244, 114, 182, 0.12);
+      border: 1px solid rgba(244, 114, 182, 0.25);
+      padding: 0.08rem 0.3rem;
+      border-radius: 4px;
+      color: #f472b6;
+      font-size: 0.68rem;
+    }
+
+    .sinsal-tag.auspicious {
+      background: rgba(251, 191, 36, 0.12);
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      color: #fbbf24;
+    }
+
+    /* Hidden Stems (지장간) Layout */
+    .jangan-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 8px;
+      padding: 0.5rem;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      min-height: 70px;
+      justify-content: center;
+    }
+
+    .jangan-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 0.15rem;
+    }
+
+    .jangan-item span.stem-color {
+      font-weight: bold;
+    }
+
+    /* Daewun Section */
+    .daewun-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .daewun-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .daewun-grid {
+        grid-template-columns: repeat(10, 1fr);
+      }
+    }
+
+    .daewun-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 8px;
+      padding: 0.5rem 0.25rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      transition: all 0.2s ease;
+    }
+
+    .daewun-item:hover {
+      border-color: rgba(168, 85, 247, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .daewun-age {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .daewun-pillar-box {
+      font-size: 1.15rem;
+      font-weight: 900;
+      padding: 0.25rem 0;
+      border-radius: 6px;
+      margin: 0.15rem 0;
+    }
+
+    .daewun-sipsin {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      line-height: 1.2;
+    }
+
+    /* Action Buttons row */
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--accent);
+    }
+
+    /* AI Prompts Section */
+    .ai-prompts-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .prompt-templates-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    @media (min-width: 600px) {
+      .prompt-templates-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .template-btn {
+      background: rgba(168, 85, 247, 0.04);
+      border: 1px solid rgba(168, 85, 247, 0.15);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .template-btn:hover {
+      background: rgba(168, 85, 247, 0.08);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.15);
+    }
+
+    .template-btn strong {
+      font-size: 0.95rem;
+      color: #d8b4fe;
+    }
+
+    .template-btn span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .payload-area {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 1rem;
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: #c4b5fd;
+      max-height: 250px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+
+    /* Loading Overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(9, 9, 11, 0.8);
+      backdrop-filter: blur(5px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      z-index: 1000;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(168, 85, 247, 0.2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s infinite linear;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Notification */
+    .notification {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #7c3aed;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 30px;
+      box-shadow: 0 10px 25px rgba(124, 58, 237, 0.4);
+      font-size: 0.9rem;
+      font-weight: 600;
+      z-index: 1001;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .notification.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        background: white !important;
+        color: black !important;
+        padding: 0 !important;
+      }
+
+      .container {
+        gap: 0 !important;
+      }
+
+      .no-print,
+      .disclaimer-banner,
+      .info-banner,
+      header,
+      .card,
+      .action-row,
+      .ai-prompts-wrapper {
+        display: none !important;
+      }
+
+      .bazi-card-capture {
+        border: none !important;
+        box-shadow: none !important;
+        background: white !important;
+        color: black !important;
+        padding: 0 !important;
+        page-break-inside: avoid;
+      }
+
+      .bazi-card-capture::before {
+        display: none !important;
+      }
+
+      .bazi-meta {
+        color: black !important;
+        border-bottom-color: #ddd !important;
+      }
+
+      .meta-item {
+        color: #555 !important;
+      }
+
+      .meta-item strong {
+        color: black !important;
+      }
+
+      .bazi-pillar .pillar-header {
+        background: #f0f0f0 !important;
+        color: black !important;
+        border-color: #ccc !important;
+      }
+
+      .bazi-cell {
+        min-height: 120px !important;
+        border: 1px solid #ccc !important;
+      }
+
+      /* Keep colors but make them printer-friendly */
+      .theme-wood {
+        background: #e8f5e9 !important;
+        color: #2e7d32 !important;
+        border-color: #a5d6a7 !important;
+      }
+
+      .theme-fire {
+        background: #ffebee !important;
+        color: #c62828 !important;
+        border-color: #ffcdd2 !important;
+      }
+
+      .theme-earth {
+        background: #fff8e1 !important;
+        color: #ef6c00 !important;
+        border-color: #ffe082 !important;
+      }
+
+      .theme-metal {
+        background: #eceff1 !important;
+        color: #37474f !important;
+        border-color: #cfd8dc !important;
+      }
+
+      .theme-water {
+        background: #e3f2fd !important;
+        color: #1565c0 !important;
+        border-color: #bbdefb !important;
+      }
+
+      .bazi-cell .cell-sipsin {
+        background: white !important;
+        border: 1px solid #999 !important;
+        color: black !important;
+      }
+
+      .sipsin-top {
+        color: #8b5cf6 !important;
+      }
+
+      .sibiunseong-bottom {
+        color: #0284c7 !important;
+      }
+
+      .jangan-card {
+        border-color: #ccc !important;
+        background: white !important;
+      }
+
+      .daewun-card {
+        margin-top: 2rem !important;
+        page-break-inside: avoid;
+      }
+
+      .daewun-item {
+        background: white !important;
+        border-color: #ccc !important;
+        color: black !important;
+      }
+
+      .daewun-pillar-box {
+        border: 1px solid #ccc !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Loading Screen -->
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="spinner"></div>
+    <div style="font-weight: 600; font-size: 1.1rem; color: #d8b4fe;" id="loadingMessage">만세력 데이터베이스 로딩 중...</div>
+  </div>
+
+  <div class="container">
+
+    <!-- Disclaimer Warning Banner -->
+    <div class="disclaimer-banner" id="disclaimerBanner">
+      <span class="icon">📐</span>
+      <div style="flex-grow: 1; padding-right: 1.5rem; line-height: 1.5; font-weight: 500;">
+        사주는 수학입니다. 하지만 과학은 아닙니다. <a href="saju_is_math.html"
+          style="color: #c084fc; text-decoration: underline; font-weight: 700; margin-left: 5px;">자세한 설명보기 →</a>
+      </div>
+      <button id="btnCloseDisclaimer"
+        style="background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; padding: 0.2rem 0.5rem; line-height: 1; margin-left: auto;">&times;</button>
+    </div>
+
+    <!-- Instruction Guide Banner -->
+    <div class="info-banner">
+      <h3>📋 사주킹 (사주 만세력 계산기) 사용 안내</h3>
+      <ol>
+        <li>생년월일시와 성별을 입력하고 <strong>[만세력 산출]</strong> 클릭.</li>
+        <li>생성된 만세력 확인(봐도 모름😅)</li>
+        <li><strong>[AI 질문용 프롬프트 템플릿]</strong> 카드 중 원하는 유형을 클릭(사주 데이터+프롬프트 복사 완료)</li>
+        <li>AI 모델(<a href="https://gemini.google.com" target="_blank"
+            style="color: #c084fc; text-decoration: underline; font-weight: 600;">Gemini</a>, <a
+            href="https://chatgpt.com" target="_blank"
+            style="color: #c084fc; text-decoration: underline; font-weight: 600;">ChatGPT</a>, <a
+            href="https://claude.ai" target="_blank"
+            style="color: #c084fc; text-decoration: underline; font-weight: 600;">Claude</a> 등)에 복사된 텍스트 붙여넣고 질문하기<br>
+          크롬 브라우저의 경우 오른쪽 상단 <strong>Gemini에게 물어보기</strong> 기능을 사용하시면 가장 편리합니다.
+        </li>
+      </ol>
+    </div>
+
+    <!-- Header -->
+    <header>
+      <h1>사주킹(사주 만세력 계산기)</h1>
+      <p>만세력을 정교하게 가공하여 AI가 완벽하게 이해할 수 있는 리포트를 만들어 드립니다.</p>
+    </header>
+
+    <div class="dashboard-grid">
+
+      <!-- Input Sidebar -->
+      <div class="card no-print">
+        <div class="card-title">출생 정보 입력</div>
+
+        <!-- Name (Optional) -->
+        <div class="form-group">
+          <label for="inputName">이름 (선택)</label>
+          <input type="text" id="inputName" placeholder="이름을 입력하세요 (예: 홍길동)">
+        </div>
+
+        <!-- Gender selection -->
+        <div class="form-group">
+          <label>성별</label>
+          <div class="radio-group">
+            <input type="radio" id="genderMale" name="gender" value="male" class="radio-input" checked>
+            <label for="genderMale" class="radio-label">남성 (乾命)</label>
+
+            <input type="radio" id="genderFemale" name="gender" value="female" class="radio-input">
+            <label for="genderFemale" class="radio-label">여성 (坤命)</label>
+          </div>
+        </div>
+
+        <!-- Birthdate Date Input -->
+        <div class="form-group">
+          <label for="inputDate">출생 생년월일</label>
+          <input type="date" id="inputDate" value="1990-10-10">
+        </div>
+
+        <!-- Calendar Type Selection -->
+        <div class="form-group">
+          <label>양력 / 음력 구분</label>
+          <div class="radio-group">
+            <input type="radio" id="calSolar" name="calType" value="solar" class="radio-input" checked>
+            <label for="calSolar" class="radio-label">양력</label>
+
+            <input type="radio" id="calLunar" name="calType" value="lunar" class="radio-input">
+            <label for="calLunar" class="radio-label">음력 평달</label>
+
+            <input type="radio" id="calLunarLeap" name="calType" value="lunar_leap" class="radio-input">
+            <label for="calLunarLeap" class="radio-label">음력 윤달</label>
+          </div>
+        </div>
+
+        <!-- Time Selector (Bazi Hour Dropdown) -->
+        <div class="form-group">
+          <label for="selectBaziHour">출생 시간</label>
+          <select id="selectBaziHour">
+            <option value="0.5">조자시 (早子時) [00:30 ~ 01:29]</option>
+            <option value="2">축시 (丑時) [01:30 ~ 03:29]</option>
+            <option value="4">인시 (寅時) [03:30 ~ 05:29]</option>
+            <option value="6">묘시 (卯時) [05:30 ~ 07:29]</option>
+            <option value="8">진시 (辰時) [07:30 ~ 09:29]</option>
+            <option value="10">사시 (巳時) [09:30 ~ 11:29]</option>
+            <option value="12">오시 (午時) [11:30 ~ 13:29]</option>
+            <option value="14" selected>미시 (未時) [13:30 ~ 15:29]</option>
+            <option value="16">신시 (申時) [15:30 ~ 17:29]</option>
+            <option value="18">유시 (酉時) [17:30 ~ 19:29]</option>
+            <option value="20">술시 (戌時) [19:30 ~ 21:29]</option>
+            <option value="22">해시 (亥時) [21:30 ~ 23:29]</option>
+            <option value="23.5">야자시 (夜子時) [23:30 ~ 24:29]</option>
+          </select>
+        </div>
+
+        <button id="btnCalculate" class="btn" disabled>만세력 산출</button>
+        <a href="https://킹수학.com" target="_blank" class="btn"
+          style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08); text-decoration: none; margin-top: 0.75rem; box-shadow: none; font-size: 0.95rem; font-weight: 600; color: var(--text-main);">킹수학.com</a>
+      </div>
+
+      <!-- Result Column -->
+      <div class="results-wrapper" id="resultsSection" style="display: none;">
+
+        <!-- Bazi Pillars Chart -->
+        <div class="bazi-card-capture" id="baziCard">
+          <div class="card-title" style="margin-bottom: 0;">사주명조 (四柱命造)</div>
+
+          <div class="bazi-meta">
+            <div class="meta-item">성별: <strong id="resGender">남성 (乾命)</strong></div>
+            <div class="meta-item">생년월일시: <strong id="resBirthSolar">1990년 10월 10일 14시 30분 (양력)</strong></div>
+            <div class="meta-item">음력 변환: <strong id="resBirthLunar">1990년 8월 22일 (평달)</strong></div>
+            <div class="meta-item" id="resSolarCorrectionRow" style="display: none;">태양시 보정: <strong
+                id="resSolarCorrection">적용 (13시 58분)</strong></div>
+            <div class="meta-item">대운수: <strong id="resDaewunNum">7</strong> (만 나이 기준 대운 진입 장벽)</div>
+            <div class="meta-item" id="resZiTypeRow">자시 구분: <strong id="resZiType">-</strong></div>
+          </div>
+
+          <!-- The Bazi Grid -->
+          <div class="bazi-grid">
+
+            <!-- 시주 (Hour Pillar) -->
+            <div class="bazi-pillar">
+              <div class="pillar-header">시주 (時柱)</div>
+              <div class="sipsin-top" id="hourSipsinStem">식신</div>
+              <div class="bazi-cell" id="hourStemCell">
+                <span class="hanja" id="hourStemHanja">辛</span>
+                <span class="pronunciation" id="hourStemPron">신</span>
+              </div>
+              <div class="bazi-cell" id="hourBranchCell">
+                <span class="hanja" id="hourBranchHanja">未</span>
+                <span class="pronunciation" id="hourBranchPron">미</span>
+                <span class="cell-sipsin" id="hourSipsinBranch">편인</span>
+              </div>
+              <div class="sibiunseong-bottom" id="hourSibiunseong">쇠</div>
+              <div class="sinsal-box" id="hourSinsal"></div>
+              <div class="jangan-card" id="hourJangan">
+                <!-- Jangan list JS -->
+              </div>
+            </div>
+
+            <!-- 일주 (Day Pillar) -->
+            <div class="bazi-pillar">
+              <div class="pillar-header">일주 (日柱)</div>
+              <div class="sipsin-top" id="daySipsinStem">본인</div>
+              <div class="bazi-cell" id="dayStemCell">
+                <span class="hanja" id="dayStemHanja">己</span>
+                <span class="pronunciation" id="dayStemPron">기</span>
+              </div>
+              <div class="bazi-cell" id="dayBranchCell">
+                <span class="hanja" id="dayBranchHanja">未</span>
+                <span class="pronunciation" id="dayBranchPron">미</span>
+                <span class="cell-sipsin" id="daySipsinBranch">비견</span>
+              </div>
+              <div class="sibiunseong-bottom" id="daySibiunseong">관대</div>
+              <div class="sinsal-box" id="daySinsal"></div>
+              <div class="jangan-card" id="dayJangan">
+                <!-- Jangan list JS -->
+              </div>
+            </div>
+
+            <!-- 월주 (Month Pillar) -->
+            <div class="bazi-pillar">
+              <div class="pillar-header">월주 (月柱)</div>
+              <div class="sipsin-top" id="monthSipsinStem">상관</div>
+              <div class="bazi-cell" id="monthStemCell">
+                <span class="hanja" id="monthStemHanja">丙</span>
+                <span class="pronunciation" id="monthStemPron">병</span>
+              </div>
+              <div class="bazi-cell" id="monthBranchCell">
+                <span class="hanja" id="monthBranchHanja">戌</span>
+                <span class="pronunciation" id="monthBranchPron">술</span>
+                <span class="cell-sipsin" id="monthSipsinBranch">겁재</span>
+              </div>
+              <div class="sibiunseong-bottom" id="monthSibiunseong">양</div>
+              <div class="sinsal-box" id="monthSinsal"></div>
+              <div class="jangan-card" id="monthJangan">
+                <!-- Jangan list JS -->
+              </div>
+            </div>
+
+            <!-- 연주 (Year Pillar) -->
+            <div class="bazi-pillar">
+              <div class="pillar-header">연주 (年柱)</div>
+              <div class="sipsin-top" id="yearSipsinStem">상관</div>
+              <div class="bazi-cell" id="yearStemCell">
+                <span class="hanja" id="yearStemHanja">庚</span>
+                <span class="pronunciation" id="yearStemPron">경</span>
+              </div>
+              <div class="bazi-cell" id="yearBranchCell">
+                <span class="hanja" id="yearBranchHanja">午</span>
+                <span class="pronunciation" id="yearBranchPron">오</span>
+                <span class="cell-sipsin" id="yearSipsinBranch">편인</span>
+              </div>
+              <div class="sibiunseong-bottom" id="yearSibiunseong">건록</div>
+              <div class="sinsal-box" id="yearSinsal"></div>
+              <div class="jangan-card" id="yearJangan">
+                <!-- Jangan list JS -->
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Daewun Major Luck Cycles inside the captured card -->
+          <div class="daewun-card" id="daewunCard">
+            <div class="pillar-header" style="font-weight: 700; text-align: left; padding: 0.5rem 1rem;">대운 흐름 (大運)
+            </div>
+            <div class="daewun-grid" id="daewunGrid">
+              <!-- Daewun items will be injected by JS -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Export & Share Buttons -->
+        <div class="action-row no-print">
+          <button class="btn-secondary" id="btnCopyJSON">📋 AI 복사용 JSON 데이터 복사</button>
+          <button class="btn-secondary" id="btnSaveImage">🖼️ 이미지로 저장</button>
+          <button class="btn-secondary" id="btnSavePDF">PDF 출력 / 저장</button>
+        </div>
+
+        <!-- AI Prompts Area -->
+        <div class="card no-print">
+          <div class="card-title">🤖 AI 사주 해설 질문 프롬프트 템플릿</div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+            원하는 테마를 클릭하세요. 복사된 프롬프트를 <strong>ChatGPT, Claude, Gemini</strong>에 붙여넣기하여 완벽한 사주 해석을 받을 수 있습니다.
+          </p>
+          <div class="prompt-templates-grid">
+            <button class="template-btn" data-template-type="general">
+              <strong>종합 사주 해석 프롬프트</strong>
+              <span>성향 분석, 인생의 강약점, 보완할 오행 등 전반적인 운의 분석</span>
+            </button>
+            <button class="template-btn" data-template-type="career">
+              <strong>직업 & 재물운 프롬프트</strong>
+              <span>나에게 맞는 커리어 유형, 사업가 및 공직 합 여부, 대운 대비 재물 흐름</span>
+            </button>
+            <button class="template-btn" data-template-type="love">
+              <strong>애정 & 인연운 프롬프트</strong>
+              <span>연애 성향, 이상적인 동반자 스타일, 인연이 닿는 시기</span>
+            </button>
+            <button class="template-btn" data-template-type="yearly">
+              <strong>신년운세 & 대운 분석 프롬프트</strong>
+              <span>대운 변화 분석, 올해 및 내년의 구체적 운세와 실천 전략</span>
+            </button>
+            <button class="template-btn" data-template-type="professional">
+              <strong>전문가 심화 해설 프롬프트</strong>
+              <span>명리 전문가/선생님의 시각으로 격국, 용신, 희기신, 합충형해파의 세밀한 해석</span>
+            </button>
+            <button class="template-btn" data-template-type="currentYear">
+              <strong>올해 나의 운세(세운) 정밀 분석</strong>
+              <span>올해 연운의 천간지지 기운이 원국/대운과 만나는 작용 및 월별 세부 흐름</span>
+            </button>
+            <button class="template-btn" data-template-type="health">
+              <strong>건강 및 체질 약점 분석</strong>
+              <span>원국 오행 부조화를 바탕으로 한 신체 취약점, 주의해야 할 질병 및 대운 예방책</span>
+            </button>
+            <button class="template-btn" data-template-type="lucky">
+              <strong>나의 럭키 아이템 & 생활 개운법</strong>
+              <span>사주 맞춤 행운의 색상, 숫자, 추천 한글 자음초성 및 이로운 음식 분석</span>
+            </button>
+          </div>
+
+          <div style="margin-top: 1rem;">
+            <label
+              style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.5rem;">
+              현재 계산된 사주 데이터 패킷 (AI에게 전달되는 실제 데이터):
+            </label>
+            <div class="payload-area" id="payloadJsonArea">
+              <!-- Raw JSON will be formatted here -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer style="text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--card-border); margin-top: 2rem; width: 100%;" class="no-print">
+      작성자 : 킹수학 제작자 킹선생
+    </footer>
+
+  </div>
+
+  <!-- Notification Toast -->
+  <div class="notification" id="toast">복사되었습니다!</div>
+
+  <script>
+    // Constants for Bazi calculations
+    const HEAVENLY_STEMS = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+    const EARTHLY_BRANCHES = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+
+    const STEM_INFO = {
+      '甲': { elem: 'wood', polarity: true },
+      '乙': { elem: 'wood', polarity: false },
+      '丙': { elem: 'fire', polarity: true },
+      '丁': { elem: 'fire', polarity: false },
+      '戊': { elem: 'earth', polarity: true },
+      '己': { elem: 'earth', polarity: false },
+      '庚': { elem: 'metal', polarity: true },
+      '辛': { elem: 'metal', polarity: false },
+      '壬': { elem: 'water', polarity: true },
+      '癸': { elem: 'water', polarity: false }
+    };
+
+    const BRANCH_INFO = {
+      '寅': { elem: 'wood', polarity: true },
+      '卯': { elem: 'wood', polarity: false },
+      '巳': { elem: 'fire', polarity: true }, // 용(Use) 기준
+      '午': { elem: 'fire', polarity: false }, // 용(Use) 기준
+      '申': { elem: 'metal', polarity: true },
+      '酉': { elem: 'metal', polarity: false },
+      '亥': { elem: 'water', polarity: true }, // 용(Use) 기준
+      '子': { elem: 'water', polarity: false }, // 용(Use) 기준
+      '辰': { elem: 'earth', polarity: true },
+      '戌': { elem: 'earth', polarity: true },
+      '丑': { elem: 'earth', polarity: false },
+      '未': { elem: 'earth', polarity: false }
+    };
+
+    const SIBIUNSEONG_STAGES = ['장생', '목욕', '관대', '건록', '제왕', '쇠', '병', '사', '묘', '절', '태', '양'];
+
+    const SIBIUNSEONG_START = {
+      '甲': { start: '亥', clockwise: true },
+      '丙': { start: '寅', clockwise: true },
+      '戊': { start: '寅', clockwise: true },
+      '庚': { start: '巳', clockwise: true },
+      '壬': { start: '申', clockwise: true },
+      '乙': { start: '午', clockwise: false },
+      '丁': { start: '酉', clockwise: false },
+      '己': { start: '酉', clockwise: false },
+      '辛': { start: '子', clockwise: false },
+      '癸': { start: '卯', clockwise: false }
+    };
+
+    const JANGAN_DATA = {
+      '子': [{ stem: '壬', ratio: 30 }, { stem: '癸', ratio: 70 }],
+      '丑': [{ stem: '癸', ratio: 30 }, { stem: '辛', ratio: 10 }, { stem: '己', ratio: 60 }],
+      '寅': [{ stem: '戊', ratio: 25 }, { stem: '丙', ratio: 25 }, { stem: '甲', ratio: 50 }],
+      '卯': [{ stem: '甲', ratio: 30 }, { stem: '乙', ratio: 70 }],
+      '辰': [{ stem: '乙', ratio: 30 }, { stem: '癸', ratio: 10 }, { stem: '戊', ratio: 60 }],
+      '巳': [{ stem: '戊', ratio: 25 }, { stem: '庚', ratio: 25 }, { stem: '丙', ratio: 50 }],
+      '午': [{ stem: '丙', ratio: 30 }, { stem: '己', ratio: 30 }, { stem: '丁', ratio: 40 }],
+      '未': [{ stem: '丁', ratio: 30 }, { stem: '乙', ratio: 10 }, { stem: '己', ratio: 60 }],
+      '申': [{ stem: '戊', ratio: 25 }, { stem: '壬', ratio: 25 }, { stem: '庚', ratio: 50 }],
+      '酉': [{ stem: '庚', ratio: 30 }, { stem: '辛', ratio: 70 }],
+      '戌': [{ stem: '辛', ratio: 30 }, { stem: '丁', ratio: 10 }, { stem: '戊', ratio: 60 }],
+      '亥': [{ stem: '戊', ratio: 25 }, { stem: '甲', ratio: 25 }, { stem: '壬', ratio: 50 }]
+    };
+
+    const SIPSIN_NAMES = {
+      0: { true: '비견', false: '겁재' },
+      1: { true: '식신', false: '상관' },
+      2: { true: '편재', false: '정재' },
+      3: { true: '편관', false: '정관' },
+      4: { true: '편인', false: '정인' }
+    };
+
+    const KOREAN_PRONUNCIATION = {
+      '甲': '갑', '乙': '을', '丙': '병', '丁': '정', '戊': '무',
+      '己': '기', '庚': '경', '辛': '신', '壬': '임', '癸': '계',
+      '子': '자', '丑': '축', '寅': '인', '卯': '묘', '辰': '진',
+      '巳': '사', '午': '오', '未': '미', '申': '신', '酉': '유',
+      '戌': '술', '亥': '해'
+    };
+
+    const ELEMENT_KOREAN = {
+      'wood': '木 (목)',
+      'fire': '火 (화)',
+      'earth': '土 (토)',
+      'metal': '金 (금)',
+      'water': '水 (수)'
+    };
+
+    // App state variables
+    let sajuRows = [];
+    let sajuDb = {}; // quick date lookup
+    let currentCalculation = null;
+
+    // Elements
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const loadingMessage = document.getElementById('loadingMessage');
+    const btnCalculate = document.getElementById('btnCalculate');
+    const resultsSection = document.getElementById('resultsSection');
+    const toast = document.getElementById('toast');
+
+    // Time Populating and settings removed since we use standard Bazi hours dropdown.
+
+    // 1. Load database CSV with progress tracking
+    async function loadDatabase() {
+      try {
+        loadingOverlay.style.display = "flex";
+        loadingMessage.innerHTML = "만세력 데이터베이스 다운로드 연결 중...";
+
+        const response = await fetch('calendar_data.txt');
+        if (!response.ok) {
+          throw new Error("데이터 파일을 찾을 수 없습니다.");
+        }
+
+        const contentLength = response.headers.get('content-length');
+        const total = contentLength ? parseInt(contentLength, 10) : 0;
+
+        let loaded = 0;
+        const reader = response.body.getReader();
+        const chunks = [];
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          chunks.push(value);
+          loaded += value.length;
+
+          if (total > 0) {
+            const percent = Math.round((loaded / total) * 100);
+            loadingMessage.innerHTML = `만세력 데이터 다운로드 중... (${percent}%)<br><span style="font-size:0.8rem; color:var(--text-muted);">${(loaded / 1024 / 1024).toFixed(2)}MB / ${(total / 1024 / 1024).toFixed(2)}MB</span>`;
+          } else {
+            loadingMessage.innerHTML = `만세력 데이터 다운로드 중... (${(loaded / 1024 / 1024).toFixed(2)}MB)`;
+          }
+        }
+
+        loadingMessage.textContent = "데이터 구문 분석 중 (오행 및 절기 변환)...";
+
+        // Combine chunks
+        const allChunks = new Uint8Array(loaded);
+        let position = 0;
+        for (const chunk of chunks) {
+          allChunks.set(chunk, position);
+          position += chunk.length;
+        }
+
+        // Decode
+        const decoder = new TextDecoder('utf-8');
+        const csvText = decoder.decode(allChunks);
+
+        const lines = csvText.split('\n');
+        // Headers: year,month,day,year_pillar,month_pillar,day_pillar,lunar_year,lunar_month,lunar_day,solar_term_hanja,solar_term_korean,term_time
+        for (let i = 1; i < lines.length; i++) {
+          const line = lines[i].trim();
+          if (!line) continue;
+          const parts = line.split(',');
+
+          const row = {
+            year: parseInt(parts[0]),
+            month: parseInt(parts[1]),
+            day: parseInt(parts[2]),
+            year_pillar: parts[3],
+            month_pillar: parts[4],
+            day_pillar: parts[5],
+            lunar_year: parseInt(parts[6]),
+            lunar_month: parseInt(parts[7]),
+            lunar_day: parseInt(parts[8]),
+            solar_term_hanja: parts[9] || null,
+            solar_term_korean: parts[10] || null,
+            term_time: parts[11] || null
+          };
+
+          sajuRows.push(row);
+          sajuDb[`${row.year}-${row.month}-${row.day}`] = row;
+        }
+
+        // Add a slight delay for smooth transition
+        await new Promise(resolve => setTimeout(resolve, 300));
+        loadingOverlay.style.display = "none";
+        btnCalculate.disabled = false;
+      } catch (err) {
+        console.error(err);
+        loadingMessage.innerHTML = `<span style="color:#ef4444;">데이터베이스 로딩 실패</span><br><span style="font-size:0.8rem; color:var(--text-muted);">${err.message}</span><br><span style="font-size:0.85rem;">로컬에서 실행 시 웹 서버가 필요할 수 있습니다. (예: VS Code Live Server 이용)</span>`;
+      }
+    }
+
+    loadDatabase();
+
+    // Sipsin Calculation logic
+    function getSipsin(selfStem, targetChar, isBranch = false) {
+      const selfInfo = STEM_INFO[selfStem];
+      const targetInfo = isBranch ? BRANCH_INFO[targetChar] : STEM_INFO[targetChar];
+      if (!selfInfo || !targetInfo) return '-';
+
+      const diff = (targetInfo.elemIndex - selfInfo.elemIndex + 5) % 5;
+      const samePolarity = (selfInfo.polarity === targetInfo.polarity);
+      return SIPSIN_NAMES[diff][samePolarity];
+    }
+
+    // Set elemIndex dynamically based on name
+    const ELEM_NAME_TO_IDX = { 'wood': 0, 'fire': 1, 'earth': 2, 'metal': 3, 'water': 4 };
+    Object.keys(STEM_INFO).forEach(k => STEM_INFO[k].elemIndex = ELEM_NAME_TO_IDX[STEM_INFO[k].elem]);
+    Object.keys(BRANCH_INFO).forEach(k => BRANCH_INFO[k].elemIndex = ELEM_NAME_TO_IDX[BRANCH_INFO[k].elem]);
+
+    // Sibiunseong logic
+    function getSibiunseong(stem, branch) {
+      const startInfo = SIBIUNSEONG_START[stem];
+      if (!startInfo) return '-';
+
+      const startIdx = EARTHLY_BRANCHES.indexOf(startInfo.start);
+      const targetIdx = EARTHLY_BRANCHES.indexOf(branch);
+      if (startIdx === -1 || targetIdx === -1) return '-';
+
+      let steps;
+      if (startInfo.clockwise) {
+        steps = (targetIdx - startIdx + 12) % 12;
+      } else {
+        steps = (startIdx - targetIdx + 12) % 12;
+      }
+      return SIBIUNSEONG_STAGES[steps];
+    }
+
+    // Convert Lunar to Solar using in-memory rows
+    function lunarToSolar(ly, lm, ld, isLeapMonth = false) {
+      const matches = sajuRows.filter(r =>
+        r.lunar_year === ly &&
+        r.lunar_month === lm &&
+        r.lunar_day === ld
+      );
+
+      if (matches.length === 0) {
+        throw new Error(`해당 음력 날짜를 찾을 수 없습니다: ${ly}년 ${lm}월 ${ld}일`);
+      }
+
+      let row;
+      if (matches.length > 1) {
+        row = isLeapMonth ? matches[matches.length - 1] : matches[0];
+      } else {
+        row = matches[0];
+      }
+      return { year: row.year, month: row.month, day: row.day };
+    }
+
+    // Main Calculation Function
+    function executeSajuCalculation() {
+      // 1. Gather inputs
+      const name = document.getElementById('inputName').value.trim() || "익명";
+      const isMale = document.getElementById('genderMale').checked;
+      const calType = document.querySelector('input[name="calType"]:checked').value;
+      const earlyZiTime = true;
+      const useSolarTime = false;
+
+      let dateVal = document.getElementById('inputDate').value;
+      if (!dateVal) return alert("날짜를 입력해 주세요.");
+
+      const dateParts = dateVal.split('-');
+      let rawYear = parseInt(dateParts[0]);
+      let rawMonth = parseInt(dateParts[1]);
+      let rawDay = parseInt(dateParts[2]);
+
+      const baziHourVal = parseFloat(document.getElementById('selectBaziHour').value);
+      const rawHour = Math.floor(baziHourVal);
+      const rawMinute = Math.round((baziHourVal % 1) * 60);
+
+      // Verify limits
+      if (rawYear < 1900 || rawYear > 2100) {
+        return alert("1900년부터 2100년 사이의 날짜만 지원합니다.");
+      }
+
+      // Save input description
+      const inputCalStr = calType === 'solar' ? '양력' : (calType === 'lunar' ? '음력 평달' : '음력 윤달');
+
+      // 2. Perform Lunar-to-Solar conversion if needed
+      let targetYear = rawYear;
+      let targetMonth = rawMonth;
+      let targetDay = rawDay;
+
+      if (calType.startsWith('lunar')) {
+        try {
+          const solarResult = lunarToSolar(rawYear, rawMonth, rawDay, calType === 'lunar_leap');
+          targetYear = solarResult.year;
+          targetMonth = solarResult.month;
+          targetDay = solarResult.day;
+        } catch (e) {
+          return alert(e.message);
+        }
+      }
+
+      // 3. Solar Time Correction
+      let birthHour = rawHour;
+      let birthMinute = rawMinute;
+      let corrYear = targetYear;
+      let corrMonth = targetMonth;
+      let corrDay = targetDay;
+      let correctionMinutes = 0;
+      let originalTimeStr = `${String(rawHour).padStart(2, '0')}:${String(rawMinute).padStart(2, '0')}`;
+
+      if (useSolarTime) {
+        const longitude = parseFloat(inputLongitude.value);
+        // UTC+9 (Seoul standard longitude is 135)
+        correctionMinutes = (longitude - 135) * 4;
+
+        let totalMinutes = Math.round(rawHour * 60 + rawMinute + correctionMinutes);
+        let dateAdjust = 0;
+
+        if (totalMinutes < 0) {
+          totalMinutes += 24 * 60;
+          dateAdjust = -1;
+        } else if (totalMinutes >= 24 * 60) {
+          totalMinutes -= 24 * 60;
+          dateAdjust = 1;
+        }
+
+        birthHour = Math.floor(totalMinutes / 60);
+        birthMinute = totalMinutes % 60;
+
+        if (dateAdjust !== 0) {
+          // Calculate adjusted date
+          const dt = new Date(targetYear, targetMonth - 1, targetDay);
+          dt.setDate(dt.getDate() + dateAdjust);
+          corrYear = dt.getFullYear();
+          corrMonth = dt.getMonth() + 1;
+          corrDay = dt.getDate();
+        }
+      }
+
+      // 4. Resolve core date row in database
+      const dateKey = `${corrYear}-${corrMonth}-${corrDay}`;
+      const coreRow = sajuDb[dateKey];
+      if (!coreRow) {
+        return alert(`해당 날짜의 만세력 데이터가 없습니다: ${dateKey}`);
+      }
+
+      let yearPillar = coreRow.year_pillar;
+      let monthPillar = coreRow.month_pillar;
+      let dayPillar = coreRow.day_pillar;
+
+      // 5. Handle Month & Year Pillar shifting by term time
+      const MONTHLY_TERMS = ['立春', '驚蟄', '淸明', '立夏', '芒種', '小暑', '立秋', '白露', '寒露', '立冬', '大雪', '小寒'];
+      if (coreRow.term_time && coreRow.term_time.trim() !== '' && MONTHLY_TERMS.includes(coreRow.solar_term_hanja)) {
+        const termDateTime = parseTermTime(coreRow.term_time);
+        const birthDateTime = new Date(corrYear, corrMonth - 1, corrDay, birthHour, birthMinute);
+
+        if (birthDateTime < termDateTime) {
+          // Prior to term time: shift to previous month's pillar
+          const currentIndex = sajuRows.findIndex(r => r.year === corrYear && r.month === corrMonth && r.day === corrDay);
+          monthPillar = getPreviousMonthPillar(sajuRows, currentIndex);
+
+          // If the term is Ipchun (立春), shift the year pillar to the previous year's pillar as well
+          if (coreRow.solar_term_hanja === '立春') {
+            if (currentIndex > 0) {
+              yearPillar = sajuRows[currentIndex - 1].year_pillar;
+            }
+          }
+        }
+      }
+
+      // 6. Early/Late Zi Time (조자시/야자시) Handling
+      let ziTimeType = null;
+      let dateAdjustmentForZi = 0;
+
+      if (birthHour === 23) {
+        if (earlyZiTime) {
+          dateAdjustmentForZi = 0;
+          ziTimeType = "야자시 (夜子時)";
+        } else {
+          dateAdjustmentForZi = 1;
+          ziTimeType = "자시 (子時)";
+        }
+      } else if (birthHour === 0) {
+        if (earlyZiTime) {
+          dateAdjustmentForZi = 0;
+          ziTimeType = "조자시 (早子時)";
+        } else {
+          dateAdjustmentForZi = 0;
+          ziTimeType = "자시 (子時)";
+        }
+      }
+
+      // Fetch row indices for next day's calculations if needed
+      const currentIndex = sajuRows.findIndex(r => r.year === corrYear && r.month === corrMonth && r.day === corrDay);
+      const originalDayStem = dayPillar[0];
+      let dayStemForHour = originalDayStem;
+
+      if (birthHour === 23) {
+        // Next day's day stem is required to calculate hour stem
+        if (currentIndex + 1 < sajuRows.length) {
+          dayStemForHour = sajuRows[currentIndex + 1].day_pillar[0];
+        }
+      }
+
+      // Apply date adjustment if late Zi time shifts the day pillar
+      if (dateAdjustmentForZi !== 0) {
+        const adjustedIdx = currentIndex + dateAdjustmentForZi;
+        if (adjustedIdx >= 0 && adjustedIdx < sajuRows.length) {
+          const adjRow = sajuRows[adjustedIdx];
+          yearPillar = adjRow.year_pillar;
+          monthPillar = adjRow.month_pillar;
+          dayPillar = adjRow.day_pillar;
+        }
+      }
+
+      // 7. Calculate Hour Pillar
+      const hourBranch = getHourBranch(birthHour, birthMinute);
+      const hourStem = getHourStem(dayStemForHour, hourBranch);
+      const hourPillar = hourStem + hourBranch;
+
+      // 8. Bazi Core Elements & Extensions
+      const dayStem = dayPillar[0];
+
+      // Sipsin
+      const yStemSipsin = getSipsin(dayStem, yearPillar[0], false);
+      const yBranchSipsin = getSipsin(dayStem, yearPillar[1], true);
+      const mStemSipsin = getSipsin(dayStem, monthPillar[0], false);
+      const mBranchSipsin = getSipsin(dayStem, monthPillar[1], true);
+      const dStemSipsin = "본인 (일주)";
+      const dBranchSipsin = getSipsin(dayStem, dayPillar[1], true);
+      const hStemSipsin = getSipsin(dayStem, hourPillar[0], false);
+      const hBranchSipsin = getSipsin(dayStem, hourPillar[1], true);
+
+      // Sibiunseong (Twelve Stages)
+      const ySibiun = getSibiunseong(dayStem, yearPillar[1]);
+      const mSibiun = getSibiunseong(dayStem, monthPillar[1]);
+      const dSibiun = getSibiunseong(dayStem, dayPillar[1]);
+      const hSibiun = getSibiunseong(dayStem, hourPillar[1]);
+
+      // Jangan (Hidden Stems)
+      const getJanganList = (branch) => {
+        const jList = JANGAN_DATA[branch] || [];
+        return jList.map(item => ({
+          stem: item.stem,
+          pron: KOREAN_PRONUNCIATION[item.stem],
+          ratio: item.ratio,
+          sipsin: getSipsin(dayStem, item.stem, false),
+          elem: STEM_INFO[item.stem].elem
+        }));
+      };
+
+      const yJangan = getJanganList(yearPillar[1]);
+      const mJangan = getJanganList(monthPillar[1]);
+      const dJangan = getJanganList(dayPillar[1]);
+      const hJangan = getJanganList(hourPillar[1]);
+
+      // 9. Daewun Major Luck Cycle Calculation
+      const isYangYear = YANG_STEMS.includes(coreRow.year_pillar[0]);
+      const isForward = (isMale === isYangYear); // Male+Yang or Female+Yin -> Forward
+
+      // Find nearest solar term distance (in days)
+      let targetTermRow = null;
+      let targetTermDate = null;
+      const birthDateObj = new Date(corrYear, corrMonth - 1, corrDay, birthHour, birthMinute);
+
+      if (isForward) {
+        for (let i = currentIndex; i < sajuRows.length; i++) {
+          if (sajuRows[i].term_time && MONTHLY_TERMS.includes(sajuRows[i].solar_term_hanja)) {
+            const tDate = parseTermTime(sajuRows[i].term_time);
+            if (tDate >= birthDateObj) {
+              targetTermRow = sajuRows[i];
+              targetTermDate = tDate;
+              break;
+            }
+          }
+        }
+      } else {
+        for (let i = currentIndex; i >= 0; i--) {
+          if (sajuRows[i].term_time && MONTHLY_TERMS.includes(sajuRows[i].solar_term_hanja)) {
+            const tDate = parseTermTime(sajuRows[i].term_time);
+            if (tDate <= birthDateObj) {
+              targetTermRow = sajuRows[i];
+              targetTermDate = tDate;
+              break;
+            }
+          }
+        }
+      }
+
+      let daewunNum = 1;
+      if (targetTermDate) {
+        const diffMs = Math.abs(birthDateObj.getTime() - targetTermDate.getTime());
+        const diffDays = diffMs / (1000 * 60 * 60 * 24);
+        daewunNum = Math.round(diffDays / 3);
+        if (daewunNum === 0) daewunNum = 1;
+      }
+
+      // Generate 10 cycles
+      const monthStem = monthPillar[0];
+      const monthBranch = monthPillar[1];
+      const mStemIdx = HEAVENLY_STEMS.indexOf(monthStem);
+      const mBranchIdx = EARTHLY_BRANCHES.indexOf(monthBranch);
+
+      const daewunPillars = [];
+      for (let i = 1; i <= 10; i++) {
+        let sIdx, bIdx;
+        if (isForward) {
+          sIdx = (mStemIdx + i) % 10;
+          bIdx = (mBranchIdx + i) % 12;
+        } else {
+          sIdx = (mStemIdx - i + 100) % 10;
+          bIdx = (mBranchIdx - i + 120) % 12;
+        }
+        const stem = HEAVENLY_STEMS[sIdx];
+        const branch = EARTHLY_BRANCHES[bIdx];
+        const pillar = stem + branch;
+        const startAge = daewunNum + (i - 1) * 10;
+
+        daewunPillars.push({
+          age: startAge,
+          pillar: pillar,
+          stem: stem,
+          branch: branch,
+          stem_sipsin: getSipsin(dayStem, stem, false),
+          branch_sipsin: getSipsin(dayStem, branch, true),
+          stem_elem: STEM_INFO[stem].elem,
+          branch_elem: BRANCH_INFO[branch].elem
+        });
+      }
+
+      // 10. Save result state
+      const sinsalData = calculateSinsal(yearPillar, monthPillar, dayPillar, hourPillar);
+
+      currentCalculation = {
+        name,
+        gender: isMale ? '건명 (남성)' : '곤명 (여성)',
+        birth_solar: `${rawYear}년 ${rawMonth}월 ${rawDay}일 [${document.getElementById('selectBaziHour').options[document.getElementById('selectBaziHour').selectedIndex].text.split(' [')[0]}] (${inputCalStr})`,
+        birth_lunar: `${coreRow.lunar_year}년 ${coreRow.lunar_month}월 ${coreRow.lunar_day}일 (${coreRow.lunar_month === rawMonth && calType === 'lunar_leap' ? '윤달' : '평달'})`,
+        solar_correction: "미적용",
+        daewun_number: daewunNum,
+        zi_time_type: ziTimeType || "일반 자시 구분 없음",
+        pillars: {
+          year: { pillar: yearPillar, stem: yearPillar[0], branch: yearPillar[1], stem_sipsin: yStemSipsin, branch_sipsin: yBranchSipsin, sibiun: ySibiun, jangan: yJangan, sinsal: sinsalData.year },
+          month: { pillar: monthPillar, stem: monthPillar[0], branch: monthPillar[1], stem_sipsin: mStemSipsin, branch_sipsin: mBranchSipsin, sibiun: mSibiun, jangan: mJangan, sinsal: sinsalData.month },
+          day: { pillar: dayPillar, stem: dayPillar[0], branch: dayPillar[1], stem_sipsin: dStemSipsin, branch_sipsin: dBranchSipsin, sibiun: dSibiun, jangan: dJangan, sinsal: sinsalData.day },
+          hour: { pillar: hourPillar, stem: hourPillar[0], branch: hourPillar[1], stem_sipsin: hStemSipsin, branch_sipsin: hBranchSipsin, sibiun: hSibiun, jangan: hJangan, sinsal: sinsalData.hour }
+        },
+        daewun_list: daewunPillars
+      };
+
+      // 11. Render UI
+      renderResults();
+    }
+
+    // Helper functions
+    const YANG_STEMS = ['甲', '丙', '戊', '庚', '壬'];
+
+    function parseTermTime(str) {
+      const y = parseInt(str.substring(0, 4));
+      const m = parseInt(str.substring(4, 6)) - 1;
+      const d = parseInt(str.substring(6, 8));
+      const h = parseInt(str.substring(8, 10));
+      const min = parseInt(str.substring(10, 12));
+      return new Date(y, m, d, h, min);
+    }
+
+    function getPreviousMonthPillar(rows, idx) {
+      const currentPillar = rows[idx].month_pillar;
+      for (let i = idx - 1; i >= 0; i--) {
+        if (rows[i].month_pillar !== currentPillar) {
+          return rows[i].month_pillar;
+        }
+      }
+      return currentPillar;
+    }
+
+    function getHourBranch(hour, minute) {
+      const timeVal = hour + minute / 60.0;
+      if (timeVal < 1.0 || timeVal >= 23.0) return '子';
+      if (timeVal >= 1.0 && timeVal < 3.0) return '丑';
+      if (timeVal >= 3.0 && timeVal < 5.0) return '寅';
+      if (timeVal >= 5.0 && timeVal < 7.0) return '卯';
+      if (timeVal >= 7.0 && timeVal < 9.0) return '辰';
+      if (timeVal >= 9.0 && timeVal < 11.0) return '巳';
+      if (timeVal >= 11.0 && timeVal < 13.0) return '午';
+      if (timeVal >= 13.0 && timeVal < 15.0) return '未';
+      if (timeVal >= 15.0 && timeVal < 17.0) return '申';
+      if (timeVal >= 17.0 && timeVal < 19.0) return '酉';
+      if (timeVal >= 19.0 && timeVal < 21.0) return '戌';
+      if (timeVal >= 21.0 && timeVal < 23.0) return '亥';
+      return '子';
+    }
+
+    function getHourStem(dayStem, hourBranch) {
+      const dayStemToStart = {
+        '甲': 0, '己': 0,
+        '乙': 2, '庚': 2,
+        '丙': 4, '辛': 4,
+        '丁': 6, '壬': 6,
+        '戊': 8, '癸': 8
+      };
+      const startIdx = dayStemToStart[dayStem] || 0;
+      const branchIdx = EARTHLY_BRANCHES.indexOf(hourBranch);
+      const stemIdx = (startIdx + branchIdx) % 10;
+      return HEAVENLY_STEMS[stemIdx];
+    }
+
+    function calculateSinsal(yearPillar, monthPillar, dayPillar, hourPillar) {
+      const yStem = yearPillar[0], yBranch = yearPillar[1];
+      const mStem = monthPillar[0], mBranch = monthPillar[1];
+      const dStem = dayPillar[0], dBranch = dayPillar[1];
+      const hStem = hourPillar[0], hBranch = hourPillar[1];
+
+      const sinsal = { year: [], month: [], day: [], hour: [] };
+      const keys = ['year', 'month', 'day', 'hour'];
+      const stems = [yStem, mStem, dStem, hStem];
+      const branches = [yBranch, mBranch, dBranch, hBranch];
+      const pillars = [yearPillar, monthPillar, dayPillar, hourPillar];
+
+      // helper for Cheon-eul Gwi-in
+      const checkCheoneul = (stem, branch) => {
+        if (['甲', '戊', '庚'].includes(stem) && ['丑', '未'].includes(branch)) return true;
+        if (['乙', '己'].includes(stem) && ['子', '申'].includes(branch)) return true;
+        if (['丙', '丁'].includes(stem) && ['亥', '酉'].includes(branch)) return true;
+        if (stem === '辛' && ['寅', '午'].includes(branch)) return true;
+        if (['壬', '癸'].includes(stem) && ['巳', '卯'].includes(branch)) return true;
+        return false;
+      };
+
+      // 12 Sinsal setup
+      const SAMHAP_START = {
+        '子': '申', '辰': '申', '申': '申',
+        '丑': '巳', '巳': '巳', '酉': '巳',
+        '寅': '寅', '午': '寅', '戌': '寅',
+        '卯': '亥', '未': '亥', '亥': '亥'
+      };
+      const SINSAL_12 = ['지살', '도화살', '월살', '망신살', '장성살', '반안살', '역마살', '육해살', '화개살', '겁살', '재살', '천살'];
+
+      const startBranchY = SAMHAP_START[yBranch] || '申';
+      const startBranchD = SAMHAP_START[dBranch] || '申';
+
+      // Gongmang setup
+      const getGongmang = (st, br) => {
+        const sIdx = HEAVENLY_STEMS.indexOf(st);
+        const bIdx = EARTHLY_BRANCHES.indexOf(br);
+        if (sIdx === -1 || bIdx === -1) return [];
+        const g1 = (bIdx - sIdx + 10 + 12) % 12;
+        const g2 = (bIdx - sIdx + 11 + 12) % 12;
+        return [EARTHLY_BRANCHES[g1], EARTHLY_BRANCHES[g2]];
+      };
+      const dGongmang = getGongmang(dStem, dBranch);
+      const yGongmang = getGongmang(yStem, yBranch);
+
+      // Wonjin & Gwimun pairs
+      const isGwimun = (b1, b2) => {
+        const pairs = [['子', '酉'], ['丑', '午'], ['寅', '未'], ['卯', '申'], ['辰', '亥'], ['巳', '戌']];
+        return pairs.some(p => (p[0] === b1 && p[1] === b2) || (p[0] === b2 && p[1] === b1));
+      };
+      const isWonjin = (b1, b2) => {
+        const pairs = [['子', '未'], ['丑', '午'], ['寅', '酉'], ['卯', '申'], ['辰', '亥'], ['巳', '戌']];
+        return pairs.some(p => (p[0] === b1 && p[1] === b2) || (p[0] === b2 && p[1] === b1));
+      };
+
+      // Loop through pillars
+      for (let i = 0; i < 4; i++) {
+        const key = keys[i];
+        const s = stems[i];
+        const b = branches[i];
+        const p = pillars[i];
+        const list = [];
+
+        // --- 1. Pillar-Specific ---
+        // 백호대살
+        if (['甲辰', '乙未', '丙戌', '丁丑', '戊辰', '壬戌', '癸丑'].includes(p)) list.push('백호대살');
+        // 괴강살
+        if (['戊戌', '庚戌', '庚辰', '壬辰'].includes(p)) list.push('괴강살');
+        // 고란살
+        if (['甲寅', '乙巳', '丙午', '丁巳', '戊申', '辛亥'].includes(p)) list.push('고란살');
+
+        // --- 2. 12 Sinsal ---
+        const idxY = (EARTHLY_BRANCHES.indexOf(b) - EARTHLY_BRANCHES.indexOf(startBranchY) + 12) % 12;
+        list.push(SINSAL_12[idxY] + '(연)');
+        const idxD = (EARTHLY_BRANCHES.indexOf(b) - EARTHLY_BRANCHES.indexOf(startBranchD) + 12) % 12;
+        list.push(SINSAL_12[idxD] + '(일)');
+
+        // --- 3. Auspicious Stars (Gwi-in & Amrok) ---
+        // 천을귀인
+        if (checkCheoneul(dStem, b)) list.push('천을귀인(일)');
+        if (checkCheoneul(yStem, b)) list.push('천을귀인(연)');
+
+        // 태극귀인
+        const checkTaegeuk = (stem) => {
+          if (['甲', '乙'].includes(stem) && ['子', '午'].includes(b)) return true;
+          if (['丙', '丁'].includes(stem) && ['卯', '酉'].includes(b)) return true;
+          if (['戊', '己'].includes(stem) && ['辰', '戌', '丑', '未'].includes(b)) return true;
+          if (['庚', '辛'].includes(stem) && ['寅', '亥'].includes(b)) return true;
+          if (['壬', '癸'].includes(stem) && ['巳', '申'].includes(b)) return true;
+          return false;
+        };
+        if (checkTaegeuk(dStem)) list.push('태극귀인(일)');
+        if (checkTaegeuk(yStem)) list.push('태극귀인(연)');
+
+        // 천관귀인
+        const cheongwanBranch = { '甲': '未', '乙': '申', '丙': '酉', '丁': '亥', '戊': '戌', '己': '卯', '庚': '丑', '辛': '寅', '壬': '午', '癸': '巳' };
+        if (b === cheongwanBranch[dStem]) list.push('천관귀인(일)');
+        if (b === cheongwanBranch[yStem]) list.push('천관귀인(연)');
+
+        // 문창귀인
+        const munchangBranch = { '甲': '巳', '乙': '午', '丙': '申', '丁': '酉', '戊': '申', '己': '酉', '庚': '亥', '辛': '子', '壬': '寅', '癸': '卯' };
+        if (b === munchangBranch[dStem]) list.push('문창귀인(일)');
+        if (b === munchangBranch[yStem]) list.push('문창귀인(연)');
+
+        // 학당귀인
+        const hakdangBranch = { '甲': '亥', '乙': '午', '丙': '寅', '丁': '酉', '戊': '寅', '己': '酉', '庚': '巳', '辛': '子', '壬': '申', '癸': '卯' };
+        if (b === hakdangBranch[dStem]) list.push('학당귀인(일)');
+        if (b === hakdangBranch[yStem]) list.push('학당귀인(연)');
+
+        // 암록
+        const amrokBranch = { '甲': '亥', '乙': '戌', '丙': '申', '丁': '未', '戊': '申', '己': '未', '庚': '巳', '辛': '辰', '壬': '寅', '癸': '丑' };
+        if (b === amrokBranch[dStem]) list.push('암록(일)');
+        if (b === amrokBranch[yStem]) list.push('암록(연)');
+
+        // 천덕귀인 & 월덕귀인
+        // 천덕
+        let cheondeokMatch = false;
+        if (mBranch === '寅' && s === '丁') cheondeokMatch = true;
+        else if (mBranch === '卯' && b === '申') cheondeokMatch = true;
+        else if (mBranch === '辰' && s === '壬') cheondeokMatch = true;
+        else if (mBranch === '巳' && s === '辛') cheondeokMatch = true;
+        else if (mBranch === '午' && b === '亥') cheondeokMatch = true;
+        else if (mBranch === '未' && s === '甲') cheondeokMatch = true;
+        else if (mBranch === '申' && s === '癸') cheondeokMatch = true;
+        else if (mBranch === '酉' && b === '寅') cheondeokMatch = true;
+        else if (mBranch === '戌' && s === '丙') cheondeokMatch = true;
+        else if (mBranch === '亥' && s === '乙') cheondeokMatch = true;
+        else if (mBranch === '子' && b === '巳') cheondeokMatch = true;
+        else if (mBranch === '丑' && s === '庚') cheondeokMatch = true;
+        if (cheondeokMatch) list.push('천덕귀인');
+
+        // 월덕
+        let woldoekMatch = false;
+        if (['寅', '오', '午', '戌'].includes(mBranch) && s === '丙') woldoekMatch = true;
+        else if (['申', '자', '子', '辰'].includes(mBranch) && s === '壬') woldoekMatch = true;
+        else if (['亥', '卯', '미', '未'].includes(mBranch) && s === '甲') woldoekMatch = true;
+        else if (['巳', '酉', '축', '丑'].includes(mBranch) && s === '庚') woldoekMatch = true;
+        if (woldoekMatch) list.push('월덕귀인');
+
+        // 천의성
+        const cheonuiIdx = (EARTHLY_BRANCHES.indexOf(mBranch) - 1 + 12) % 12;
+        if (b === EARTHLY_BRANCHES[cheonuiIdx]) list.push('천의성');
+
+        // --- 4. Inauspicious & Relationship Stars ---
+        // 양인살
+        const yanginBranch = { '甲': '卯', '丙': '午', '戊': '午', '庚': '酉', '壬': '子' };
+        if (b === yanginBranch[dStem]) list.push('양인살(일)');
+        if (b === yanginBranch[yStem]) list.push('양인살(연)');
+
+        // 홍염살
+        const hongyeomMap = { '甲': ['午'], '乙': ['申'], '丙': ['寅'], '丁': ['未'], '戊': ['辰'], '己': ['辰'], '庚': ['戌'], '辛': ['酉'], '壬': ['申', '子'], '癸': ['申'] };
+        if (hongyeomMap[dStem] && hongyeomMap[dStem].includes(b)) list.push('홍염살');
+
+        // 귀문관살
+        if (isGwimun(b, dBranch)) list.push('귀문관살(일)');
+        if (isGwimun(b, yBranch)) list.push('귀문관살(연)');
+
+        // 원진살
+        if (isWonjin(b, dBranch)) list.push('원진살(일)');
+        if (isWonjin(b, yBranch)) list.push('원진살(연)');
+
+        // 공망
+        if (dGongmang.includes(b)) list.push('공망(일)');
+        if (yGongmang.includes(b)) list.push('공망(연)');
+
+        // 상문살 & 조객살
+        const sangmunBranch = EARTHLY_BRANCHES[(EARTHLY_BRANCHES.indexOf(yBranch) + 2) % 12];
+        const jogaekBranch = EARTHLY_BRANCHES[(EARTHLY_BRANCHES.indexOf(yBranch) - 2 + 12) % 12];
+        if (b === sangmunBranch) list.push('상문살');
+        if (b === jogaekBranch) list.push('조객살');
+
+        // 현침살
+        const hyeonchimChars = ['甲', '辛', '卯', '오', '午', '申'];
+        if (hyeonchimChars.includes(s) || hyeonchimChars.includes(b)) list.push('현침살');
+
+        sinsal[key] = list;
+      }
+
+      // --- 5. Combinations (Samhyeong, Jahyeong, etc.) on whole chart ---
+      // 인사신 삼형
+      if (branches.includes('寅') && branches.includes('巳') && branches.includes('申')) {
+        for (let i = 0; i < 4; i++) {
+          if (['寅', '巳', '申'].includes(branches[i])) {
+            sinsal[keys[i]].push('삼형살(인사신)');
+          }
+        }
+      } else {
+        // partial Hyeong
+        const hasInSa = branches.includes('寅') && branches.includes('巳');
+        const hasSaSin = branches.includes('巳') && branches.includes('申');
+        const hasInSin = branches.includes('寅') && branches.includes('申');
+        for (let i = 0; i < 4; i++) {
+          if (hasInSa && ['寅', '巳'].includes(branches[i])) sinsal[keys[i]].push('형살(인사)');
+          if (hasSaSin && ['巳', '申'].includes(branches[i])) sinsal[keys[i]].push('형살(사신)');
+          if (hasInSin && ['寅', '申'].includes(branches[i])) sinsal[keys[i]].push('형살(인신)');
+        }
+      }
+
+      // 축술미 삼형
+      if (branches.includes('丑') && branches.includes('戌') && branches.includes('未')) {
+        for (let i = 0; i < 4; i++) {
+          if (['丑', '戌', '未'].includes(branches[i])) {
+            sinsal[keys[i]].push('삼형살(축술미)');
+          }
+        }
+      } else {
+        // partial Hyeong
+        const hasChukSul = branches.includes('丑') && branches.includes('戌');
+        const hasSulMi = branches.includes('戌') && branches.includes('未');
+        const hasChukMi = branches.includes('丑') && branches.includes('未');
+        for (let i = 0; i < 4; i++) {
+          if (hasChukSul && ['丑', '戌'].includes(branches[i])) sinsal[keys[i]].push('형살(축술)');
+          if (hasSulMi && ['戌', '未'].includes(branches[i])) sinsal[keys[i]].push('형살(술미)');
+          if (hasChukMi && ['丑', '未'].includes(branches[i])) sinsal[keys[i]].push('형살(축미)');
+        }
+      }
+
+      // 자묘 상형
+      if (branches.includes('子') && branches.includes('卯')) {
+        for (let i = 0; i < 4; i++) {
+          if (['子', '卯'].includes(branches[i])) {
+            sinsal[keys[i]].push('상형살(자묘)');
+          }
+        }
+      }
+
+      // 자형살 (辰辰, 午午, 酉酉, 亥亥)
+      ['辰', '午', '酉', '亥'].forEach(x => {
+        const count = branches.filter(b => b === x).length;
+        if (count >= 2) {
+          for (let i = 0; i < 4; i++) {
+            if (branches[i] === x) {
+              sinsal[keys[i]].push('자형살');
+            }
+          }
+        }
+      });
+
+      // Deduplicate all list arrays
+      keys.forEach(k => {
+        sinsal[k] = [...new Set(sinsal[k])];
+      });
+
+      return sinsal;
+    }
+
+    // Render Bazi Grid and Data in HTML
+    function renderResults() {
+      if (!currentCalculation) return;
+
+      const calc = currentCalculation;
+
+      // Meta Data
+      document.getElementById('resGender').textContent = calc.gender;
+      document.getElementById('resBirthSolar').textContent = calc.birth_solar;
+      document.getElementById('resBirthLunar').textContent = calc.birth_lunar;
+      document.getElementById('resSolarCorrection').textContent = calc.solar_correction;
+      document.getElementById('resDaewunNum').textContent = calc.daewun_number;
+
+      const ziRow = document.getElementById('resZiTypeRow');
+      if (calc.zi_time_type && calc.zi_time_type !== "일반 자시 구분 없음") {
+        ziRow.style.display = "block";
+        document.getElementById('resZiType').textContent = calc.zi_time_type;
+      } else {
+        ziRow.style.display = "none";
+      }
+
+      // Pillars setup helper
+      const updatePillarUI = (prefix, pillarData, isDay = false) => {
+        const stemHanja = document.getElementById(`${prefix}StemHanja`);
+        const stemPron = document.getElementById(`${prefix}StemPron`);
+        const stemCell = document.getElementById(`${prefix}StemCell`);
+        const branchHanja = document.getElementById(`${prefix}BranchHanja`);
+        const branchPron = document.getElementById(`${prefix}BranchPron`);
+        const branchCell = document.getElementById(`${prefix}BranchCell`);
+        const sipsinStem = document.getElementById(`${prefix}SipsinStem`);
+        const sipsinBranch = document.getElementById(`${prefix}SipsinBranch`);
+        const sibiun = document.getElementById(`${prefix}Sibiunseong`);
+        const sinsalDiv = document.getElementById(`${prefix}Sinsal`);
+        const janganDiv = document.getElementById(`${prefix}Jangan`);
+
+        // Hanja and Pronunciation
+        stemHanja.textContent = pillarData.stem;
+        stemPron.textContent = KOREAN_PRONUNCIATION[pillarData.stem];
+        branchHanja.textContent = pillarData.branch;
+        branchPron.textContent = KOREAN_PRONUNCIATION[pillarData.branch];
+
+        // Sipsin
+        sipsinStem.textContent = isDay ? "본인 (일간)" : pillarData.stem_sipsin;
+        sipsinBranch.textContent = pillarData.branch_sipsin;
+
+        // Twelve Stages
+        sibiun.textContent = pillarData.sibiun;
+
+        // Sinsal (Symbolic Stars)
+        sinsalDiv.innerHTML = "";
+        if (pillarData.sinsal && pillarData.sinsal.length > 0) {
+          pillarData.sinsal.forEach(sal => {
+            const tagSpan = document.createElement('span');
+            const isAuspicious = sal.includes("귀인") || sal.includes("암록") || sal.includes("천의성");
+            tagSpan.className = isAuspicious ? "sinsal-tag auspicious" : "sinsal-tag";
+            tagSpan.textContent = sal;
+            sinsalDiv.appendChild(tagSpan);
+          });
+        }
+
+        // Styling element theme classes
+        const stemElem = STEM_INFO[pillarData.stem].elem;
+        const branchElem = BRANCH_INFO[pillarData.branch].elem;
+
+        stemCell.className = `bazi-cell theme-${stemElem}`;
+        branchCell.className = `bazi-cell theme-${branchElem}`;
+
+        // Jangan listing
+        janganDiv.innerHTML = "";
+        pillarData.jangan.forEach(item => {
+          const itemDiv = document.createElement('div');
+          itemDiv.className = "jangan-item";
+          itemDiv.innerHTML = `
+            <span class="stem-color" style="color:var(--${item.elem}-color);">${item.stem}(${item.pron})</span>
+            <span>${item.sipsin} (${item.ratio}%)</span>
+          `;
+          janganDiv.appendChild(itemDiv);
+        });
+      };
+
+      // Update the 4 Pillars
+      updatePillarUI('hour', calc.pillars.hour);
+      updatePillarUI('day', calc.pillars.day, true);
+      updatePillarUI('month', calc.pillars.month);
+      updatePillarUI('year', calc.pillars.year);
+
+      // Render Daewun Cycles Grid
+      const daewunGrid = document.getElementById('daewunGrid');
+      daewunGrid.innerHTML = "";
+
+      calc.daewun_list.forEach(dw => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = "daewun-item";
+
+        // Element themes
+        const stemElemClass = `theme-${dw.stem_elem}`;
+        const branchElemClass = `theme-${dw.branch_elem}`;
+
+        itemDiv.innerHTML = `
+          <div class="daewun-age">${dw.age}세</div>
+          <div class="daewun-pillar-box ${stemElemClass}">${dw.stem}<span style="font-size:0.75rem; font-weight:normal;">(${KOREAN_PRONUNCIATION[dw.stem]})</span></div>
+          <div class="daewun-pillar-box ${branchElemClass}">${dw.branch}<span style="font-size:0.75rem; font-weight:normal;">(${KOREAN_PRONUNCIATION[dw.branch]})</span></div>
+          <div class="daewun-sipsin">
+            <div>${dw.stem_sipsin}</div>
+            <div>${dw.branch_sipsin}</div>
+          </div>
+        `;
+        daewunGrid.appendChild(itemDiv);
+      });
+
+      // Render Payload JSON Area
+      const compactJson = getCleanPayloadJSON();
+      document.getElementById('payloadJsonArea').textContent = JSON.stringify(compactJson, null, 2);
+
+      // Reveal results section
+      resultsSection.style.display = "block";
+      resultsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Build optimized JSON to send to AI
+    function getCleanPayloadJSON() {
+      if (!currentCalculation) return null;
+      const c = currentCalculation;
+      return {
+        birth_info: {
+          name: c.name,
+          gender: c.gender,
+          birth_solar: c.birth_solar,
+          birth_lunar: c.birth_lunar,
+          solar_time_correction: c.solar_correction,
+          zi_time_type: c.zi_time_type,
+          daewun_start_age: c.daewun_number
+        },
+        four_pillars: {
+          year: { pillar: c.pillars.year.pillar, stem: c.pillars.year.stem, branch: c.pillars.year.branch, stem_sipsin: c.pillars.year.stem_sipsin, branch_sipsin: c.pillars.year.branch_sipsin, "12_stages": c.pillars.year.sibiun, sinsal: c.pillars.year.sinsal, hidden_stems: c.pillars.year.jangan.map(j => `${j.stem}(${j.sipsin} ${j.ratio}%)`) },
+          month: { pillar: c.pillars.month.pillar, stem: c.pillars.month.stem, branch: c.pillars.month.branch, stem_sipsin: c.pillars.month.stem_sipsin, branch_sipsin: c.pillars.month.branch_sipsin, "12_stages": c.pillars.month.sibiun, sinsal: c.pillars.month.sinsal, hidden_stems: c.pillars.month.jangan.map(j => `${j.stem}(${j.sipsin} ${j.ratio}%)`) },
+          day: { pillar: c.pillars.day.pillar, stem: c.pillars.day.stem, branch: c.pillars.day.branch, stem_sipsin: "일간(본인)", branch_sipsin: c.pillars.day.branch_sipsin, "12_stages": c.pillars.day.sibiun, sinsal: c.pillars.day.sinsal, hidden_stems: c.pillars.day.jangan.map(j => `${j.stem}(${j.sipsin} ${j.ratio}%)`) },
+          hour: { pillar: c.pillars.hour.pillar, stem: c.pillars.hour.stem, branch: c.pillars.hour.branch, stem_sipsin: c.pillars.hour.stem_sipsin, branch_sipsin: c.pillars.hour.branch_sipsin, "12_stages": c.pillars.hour.sibiun, sinsal: c.pillars.hour.sinsal, hidden_stems: c.pillars.hour.jangan.map(j => `${j.stem}(${j.sipsin} ${j.ratio}%)`) }
+        },
+        daewun_10_cycles: c.daewun_list.map(dw => ({
+          age_start: dw.age,
+          pillar: dw.pillar,
+          stem_sipsin: dw.stem_sipsin,
+          branch_sipsin: dw.branch_sipsin
+        }))
+      };
+    }
+
+    // Build formatted Markdown Bazi report prompt
+    function getBaziMarkdownPrompt() {
+      if (!currentCalculation) return "";
+      const jsonStr = JSON.stringify(getCleanPayloadJSON(), null, 2);
+      return `[나의 사주(만세력) 계산 데이터 패킷]
+\`\`\`json
+${jsonStr}
+\`\`\`
+
+위 데이터는 나의 생년월일시와 성별을 바탕으로 계산된 사주 만세력 정보(천간, 지지, 십신, 지장간, 십이운성, 대운)입니다. 
+이를 기반으로 동양 역학의 원리에 맞춰 신뢰성 높은 명리학적 사주 해석을 요청드립니다.`;
+    }
+
+    // Copy to clipboard helper
+    function copyTextToClipboard(text, msg = "복사되었습니다!") {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(msg);
+      }).catch(err => {
+        alert("복사 중 오류 발생: " + err);
+      });
+    }
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2000);
+    }
+
+    // Event listener for Calculate button
+    btnCalculate.addEventListener('click', executeSajuCalculation);
+
+    // Copy Actions
+    document.getElementById('btnCopyJSON').addEventListener('click', () => {
+      if (!currentCalculation) return;
+      copyTextToClipboard(JSON.stringify(getCleanPayloadJSON(), null, 2), "JSON 데이터가 복사되었습니다!");
+    });
+
+    // Save as Image using html2canvas
+    document.getElementById('btnSaveImage').addEventListener('click', () => {
+      const card = document.getElementById('baziCard');
+      showToast("이미지 파일 생성 중...");
+
+      // Make sure the image captures nicely by keeping default layout scale
+      html2canvas(card, {
+        backgroundColor: '#111115',
+        scale: 2, // higher resolution
+        useCORS: true,
+        logging: false
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `saju_chart_${currentCalculation.name}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      }).catch(err => {
+        alert("이미지 저장 실패: " + err);
+      });
+    });
+
+    // Export as PDF
+    document.getElementById('btnSavePDF').addEventListener('click', () => {
+      window.print();
+    });
+
+    // AI Prompt Template Library Handler
+    const AI_PROMPT_TEMPLATES = {
+      general: "나의 전반적인 타고난 성향과 기질(오행의 균형), 성격의 장단점 및 강점, 그리고 인생에서 부족한 기운을 채우기 위한 실질적 개운법(생활 습관, 색상 등)을 자세히 해설해줘.",
+      career: "나의 적성과 직업운을 세밀히 해설해줘. 내가 연구/기술, 공직/조직 생활, 창업/사업, 예체능/창작 중 어느 쪽에 더 어울리는 기질인지, 재물을 벌어들이는 방식과 향후 재물운 대운의 변화 흐름은 어떻게 대비해야 하는지 적어줘.",
+      love: "나의 연애 및 배우자운을 해석해줘. 내가 상대에게 어떤 매력으로 작용하는지, 나와 잘 어울리는 배우자/이성의 기질(어떤 오행이 발달한 사람)은 무엇인지, 인생 흐름상 결혼운이나 애정 결실이 가장 유리한 시기는 언제인지 설명해줘.",
+      yearly: "나의 현재 대운 흐름을 짚어주고, 올해(세운)와 내년의 세부 연간 흐름을 해설해줘. 직업 이동, 건강 관리, 문서 취득, 대인관계 측면에서 이 기간 동안 어떤 태도를 취하고 무엇을 조심해야 기회를 극대화할 수 있는지 구체적으로 조언해줘.",
+      professional: "사주명리학의 격국(格局), 조후(調候)와 억부(抑扶) 관점에서 용신(用神), 희신(喜神), 기신(忌神), 구신(仇神)을 명확하게 가려주고, 원국의 천간 합충(合沖) 및 지지의 삼합·방합·형충파해(刑沖破害) 작용을 명리 역학 전문가의 시각에서 학술적으로 심도 있게 해석해줘.",
+      currentYear: "올해 세운(연운)의 천간지지가 내 일간 및 사주 원국 전체와 대운에 결합하여 발생하는 십신적 변화, 신살 작용, 생극제화 흐름을 세밀히 해설해줘. 특히 어떤 오행이 강해지고 약해지는지 분석하고 월별 주요 흐름도 함께 조언해줘.",
+      health: "나의 사주 원국에서 오행의 균형도(과다와 조열함/한습함)를 분석하여 취약한 건강상의 부위 및 발생할 수 있는 주요 질병 후보군을 도출해줘. 대운/세운 흐름에서 특별히 건강을 유의해야 할 시기와 식습관 및 생활 방식 개운법을 적어줘.",
+      lucky: "나의 사주 원국에서 과다하거나 부족한 오행의 에너지 흐름(용신/희신)을 분석하여, 나에게 가장 조화로운 (1) 행운의 색상(색깔), (2) 나를 돕는 행운의 숫자, (3) 나에게 긍정적인 파동을 주는 한글 초성(자음), (4) 부족한 장부의 기운을 다스리는 행운의 건강 음식 처방을 이유와 함께 명쾌하게 추천해줘. 일상생활에서 바로 활용할 수 있는 톡톡 튀고 재미있는 개운(開運) 실천 팁도 함께 알려줘!"
+    };
+
+    document.querySelectorAll('.template-btn').forEach(btn => {
+      btn.addEventListener('click', function () {
+        if (!currentCalculation) return alert("먼저 만세력을 산출해 주세요.");
+        const type = this.getAttribute('data-template-type');
+        const templateText = AI_PROMPT_TEMPLATES[type];
+
+        const finalPrompt = `${getBaziMarkdownPrompt()}
+
+[AI 질문 요청 사항]
+${templateText}`;
+
+        copyTextToClipboard(finalPrompt, "프롬프트가 클립보드에 복사되었습니다! 바로 AI에 입력하세요.");
+      });
+    });
+
+    // Disclaimer Dismissal Logic (Simple session dismissal, visible again on refresh)
+    const disclaimerBanner = document.getElementById('disclaimerBanner');
+    const btnCloseDisclaimer = document.getElementById('btnCloseDisclaimer');
+
+    if (disclaimerBanner && btnCloseDisclaimer) {
+      btnCloseDisclaimer.addEventListener('click', function () {
+        disclaimerBanner.style.display = 'none';
+      });
+    }
+
+  </script>
+</body>
+
+</html>

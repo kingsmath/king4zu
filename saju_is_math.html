@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5YW0T2C109"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-5YW0T2C109');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사주는 수학이다. 하지만 과학은 아니다.</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --bg-dark: #09090b;
+            --card-bg: rgba(20, 20, 25, 0.7);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --accent: #a855f7;
+            --accent-glow: rgba(168, 85, 247, 0.4);
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image:
+                radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: 'Outfit', 'Noto Sans KR', sans-serif;
+            line-height: 1.6;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: rgba(20, 20, 25, 0.5);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(16px);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 30px;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f472b6, #a855f7, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            letter-spacing: -0.05em;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        .intro-p {
+            font-size: 1.1rem;
+            color: var(--text-main);
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(168, 85, 247, 0.05);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .grid {
+            display: block;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .card:hover {
+            border-color: rgba(168, 85, 247, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(168, 85, 247, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 12px;
+        }
+
+        .number {
+            font-family: 'Fira Code', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #f472b6;
+            margin-right: 15px;
+            line-height: 1;
+        }
+
+        .title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .formula {
+            font-family: 'Fira Code', monospace;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 4px 10px;
+            border-radius: 6px;
+            color: #60a5fa;
+            font-size: 0.95rem;
+            display: inline-block;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .description {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+        }
+
+        .nuance {
+            background-color: rgba(168, 85, 247, 0.04);
+            border: 1px dashed rgba(168, 85, 247, 0.15);
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: #d8b4fe;
+            font-size: 0.9rem;
+        }
+
+        .nuance strong {
+            color: #f472b6;
+        }
+
+        /* Back to Home Link */
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            margin-bottom: 25px;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+            transform: translateX(-3px);
+        }
+
+        /* Info Section & Boxes */
+        .info-section {
+            margin-top: 40px;
+            border-top: 1px solid var(--card-border);
+            padding-top: 40px;
+        }
+
+        .info-section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f472b6, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .info-box {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            line-height: 1.7;
+            backdrop-filter: blur(10px);
+        }
+
+        .info-box h3 {
+            font-size: 1.15rem;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+        }
+
+        .info-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-box.warning {
+            border-color: rgba(248, 113, 113, 0.2);
+            background-color: rgba(248, 113, 113, 0.03);
+        }
+
+        .info-box.warning h3 {
+            color: #f87171;
+        }
+
+        /* Lists for pillars */
+        .pillar-desc-list {
+            margin-top: 12px;
+            padding-left: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            list-style-type: none;
+        }
+
+        .pillar-desc-item {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pillar-tag {
+            background: rgba(168, 85, 247, 0.1);
+            color: #d8b4fe;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            min-width: 65px;
+            text-align: center;
+            border: 1px solid rgba(168, 85, 247, 0.15);
+        }
+
+        .pillar-desc-item strong {
+            color: var(--text-main);
+        }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            border-top: 1px solid var(--card-border);
+            padding-top: 30px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .conclusion {
+            font-size: 1.1rem;
+            color: var(--text-main);
+            line-height: 1.7;
+            text-align: justify;
+        }
+
+        /* Current Saju Box Styling */
+        .current-saju-box {
+            background-color: var(--card-bg);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 40px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .saju-box-header {
+            font-size: 0.9rem;
+            color: var(--accent);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .live-indicator {
+            color: #4ade80;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.3;
+            }
+        }
+
+        .saju-box-time {
+            font-size: 1.05rem;
+            color: var(--text-main);
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .saju-box-pillars {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: #60a5fa;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 12px 20px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            text-shadow: 0 0 10px rgba(96, 165, 250, 0.3);
+        }
+
+        .saju-box-notice {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .disclaimer-box {
+            background: rgba(168, 85, 247, 0.04);
+            border: 1px solid rgba(168, 85, 247, 0.15);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .disclaimer-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #d8b4fe;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .disclaimer-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <div style="text-align: left;">
+                <a href="index.html" class="back-link">
+                    ← 메인 만세력 계산기로 돌아가기
+                </a>
+            </div>
+            <h1>사주는 수학이다. 하지만 과학은 아니다.</h1>
+            <div class="subtitle">중국 한나라 시절부터 시작된 간지 표기 체계와 데이터 분석</div>
+        </header>
+
+        <!-- 안내 메시지 박스 -->
+        <div class="disclaimer-box">
+            <div class="disclaimer-title">⚠️ 안내 및 참고 사항</div>
+            <p class="disclaimer-desc">
+                사주가 수학적이라는 것은 사주에 만세력에 나오는 글자들과 용어가 기계적인 계산에 의해서 도출된다는 것을 의미하며, 이 사주가 실제 인생에 미치는 영향이 과학적으로 증명된 것은 아닙니다.
+                하지만 오래된 문화로서의 깊은 가치를 지니고 있습니다. 사주에 대한 해석은 저마다 다를 수 있으므로, 좋은 점만 믿고 긍정적인 삶의 힌트로 가볍게 참고만 하시는 것을 추천합니다.
+            </p>
+        </div>
+
+        <!-- 실시간 사주 좌표 박스 -->
+        <div class="current-saju-box" id="currentSajuBox" style="display:none;">
+            <div class="saju-box-header">
+                <span class="live-indicator">●</span>
+                현재 시간 기준 사주 좌표 설정
+            </div>
+            <div class="saju-box-time" id="sajuBoxTime">
+                -
+            </div>
+            <div class="saju-box-pillars" id="sajuBoxPillars">
+                현재 사주 산출 중...
+            </div>
+            <div class="saju-box-notice">
+                시주는 2시간마다 바뀝니다. 전국, 전세계 지금 이 시간에 태어나는 모든 아기들은 똑같은 사주팔자(시간 변수)를 갖습니다.
+            </div>
+        </div>
+
+        <div class="intro-p">
+            사주는 기원전 17세기 중국 상나라 시절부터 사용된 간지 달력 체계와 기원전 2세기 한나라 시절 확립된 절기 계산을 바탕으로, 시간을 일정한 규칙에 따라 60갑자 기호로 치환하는
+            <strong>수학적 주기 연산 체계</strong>입니다.
+        </div>
+
+        <div class="grid">
+            <!-- 1번 카드 -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="number">60</span>
+                    <span class="title">시간의 모듈러 연산 (Modular Arithmetic)</span>
+                </div>
+                <div class="formula">최소공배수(10, 12) = 60</div>
+                <div class="description">
+                    하늘의 주기인 <strong>천간 10개</strong>(甲·乙·丙·丁·戊·己·庚·辛·壬·癸 / 갑·을·병·정·무·기·경·신·임·계)와
+                    땅의 주기인 <strong>지지 12개</strong>(子·丑·寅·卯·辰·巳·午·未·申·酉·戌·亥 / 자·축·인·묘·진·사·오·미·신·유·술·해)라는
+                    두 개의 독립적인 톱니바퀴가 맞물려 돌아가는 규칙적인 순환 구조입니다.
+                </div>
+                <div class="nuance">
+                    <strong>[해석]</strong> 60갑자는 매년(年), 매달(月), 매일(日), 그리고 매시간(時, 2시간 단위)마다
+                    톱니바퀴처럼 규칙적으로 돌아갑니다. 즉, 시간의 흐름에 따라 계속 회전하는 10과 12의 <strong>최소공배수 순환형 시간 좌표계</strong>입니다.
+                    <br><br>
+                    예를 들어 역사적 사건인 <strong>임진왜란(壬辰倭亂)</strong>은 60갑자 중 임진(壬辰)년에 일어난 왜란이며, <strong>신미양요(辛未洋擾)</strong>는
+                    신미(辛未)년에 일어난 사건입니다. 이처럼 60갑자는 중국 옛 왕조에서부터 시간의 흐름을 기록하기 위해 사용했던 체계적이고 대수학적인 달력 표기법이었습니다.
+                </div>
+            </div>
+
+            <!-- 2번 카드 -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="number">8</span>
+                    <span class="title">개인 고유의 기초 데이터 패킷 (Data Packet)</span>
+                </div>
+                <div class="formula">4 Pillars &times; 2 Characters = 8 Characters</div>
+                <div class="description">태어난 년(年), 월(月), 일(日), 시(時)라는 4개의 기둥(주)에 각각 2개의 문자(간지)가 배치되어 총 8개의 문자를 이룹니다.
+                </div>
+                <div class="nuance">
+                    <strong>[해석]</strong> 좌표 평면 위의 점처럼, 당신이 태어난 특정 시점의 <strong>시간 축을 문자형 변수로 치환한
+                        8글자의 '초기 설정 상수(Constant)'</strong> 입니다.
+                </div>
+            </div>
+
+            <!-- 3번 카드 -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="number">518,400</span>
+                    <span class="title">빅데이터 분류의 경우의 수 (Permutations)</span>
+                </div>
+                <div class="formula">60(년주) &times; 12(월주) &times; 60(일주) &times; 12(시주) = 518,400</div>
+                <div class="description">
+                    연, 월, 일, 시의 조합을 통해 나올 수 있는 모든 인간 유형의 수학적 경우의 수입니다.
+                    <br><br>
+                    <strong>💡 왜 30일이 아닌 '60(일)'을 곱하나요?</strong><br>
+                    사주에서 일(日)은 달력상의 한 달인 30일 주기가 아니라, 60갑자(갑자일, 을축일 등)가 날마다 쉬지 않고 순환하며 적용되기 때문에 총 60가지 일주(日柱)가 존재합니다.
+                    마찬가지로 시(時)는 하루 24시간을 2시간 단위로 쪼갠 12가지 시주가 적용되어,
+                    <code>60 &times; 12 &times; 60 &times; 12 = 518,400</code> 이 도출됩니다.<br>
+                </div>
+                <div class="nuance">
+                    <strong>[해석]</strong> 경우의 수를 바탕으로 <strong>51만여 개의 서랍으로 분류해 놓은 동양의
+                        '분류법 데이터베이스 인덱스'</strong>입니다.
+                </div>
+            </div>
+
+            <!-- 4번 카드 -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="number">y = f(x)</span>
+                    <span class="title">운명의 흐름을 나타내는 함수 그래프 (Function)</span>
+                </div>
+                <div class="formula">Output = f(Time Variable)</div>
+                <div class="description">타고난 사주 8자는 변하지 않는 '고정 상수'이고, 매년 흐르는 시간(대운, 세운)은 계속해서 대입되는 '입력 변수(x)'입니다.</div>
+                <div class="nuance">
+                    <strong>[해석]</strong> <strong>나의 사주팔자와 올해, 지금의 사주팔자의 조합</strong>으로 올해가 좋다. 혹은 몇 월을 조심해라. 같은 이야기를 만들
+                    수 있는 것입니다.
+                </div>
+            </div>
+
+            <!-- 5번 카드 -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="number">5</span>
+                    <span class="title">5행 목화토금수 에너지 가중치 분석 알고리즘 (Weighting Factors)</span>
+                </div>
+                <div class="formula">Vector = [木, 火, 土, 金, 水]</div>
+                <div class="description">인간의 내면 기질을 목(木)·화(火)·토(土)·금(金)·수(水)라는 다섯 가지 오행의 속성으로 분류하고, 8글자 내에 배치된 각 오행의 개수와
+                    가중치를 계산해 분석하는 방식입니다.</div>
+                <div class="nuance">
+                    <strong>[해석]</strong> 사주팔자 8글자 각각이 가진 오행 속성의 분포 비율을 정량적으로 카운팅하여 보여주는 <strong>가중치
+                        분석 방식</strong>입니다.
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed rgba(255, 255, 255, 0.1);">
+                        <strong style="color: #ff7b72; display: block; margin-bottom: 8px;">🔍 1. 천간·지지의 오행 판별
+                            규칙</strong>
+                        <span
+                            style="font-size: 0.9rem; color: #8b949e; line-height: 1.6; display: block; margin-bottom: 10px;">
+                            한자의 음양오행 배속에 따라 8글자(천간 4자, 지지 4자) 각각의 오행을 판단합니다.
+                        </span>
+
+                        <div
+                            style="font-size: 0.85rem; color: #c9d1d9; background: rgba(0, 0, 0, 0.2); padding: 12px; border-radius: 8px; margin-bottom: 15px; line-height: 1.6;">
+                            • <strong style="color: #4ade80;">木 (나무)</strong>: 천간 <strong>甲, 乙</strong> / 지지 <strong>寅,
+                                卯</strong><br>
+                            • <strong style="color: #f87171;">火 (불)</strong>: 천간 <strong>丙, 丁</strong> / 지지 <strong>巳,
+                                午</strong><br>
+                            • <strong style="color: #fbbf24;">土 (흙)</strong>: 천간 <strong>戊, 己</strong> / 지지 <strong>辰,
+                                戌, 丑, 未</strong><br>
+                            • <strong style="color: #e4e4e7;">金 (쇠)</strong>: 천간 <strong>庚, 辛</strong> / 지지 <strong>申,
+                                酉</strong><br>
+                            • <strong style="color: #60a5fa;">水 (물)</strong>: 천간 <strong>壬, 癸</strong> / 지지 <strong>亥,
+                                子</strong>
+                        </div>
+
+                        <strong style="color: #ff7b72; display: block; margin-bottom: 8px;">💡 2. 실제 사주 8자 분석
+                            예시</strong>
+                        <span
+                            style="font-size: 0.9rem; color: #8b949e; line-height: 1.6; display: block; margin-bottom: 10px;">
+                            만약 어떤 사람이 <strong>庚午년, 己丑월, 丙寅일, 戊子시</strong>에 태어났다면, 8글자는 다음과 같이 매핑됩니다.
+                        </span>
+
+                        <div
+                            style="font-size: 0.85rem; color: #c9d1d9; background: rgba(0, 0, 0, 0.2); padding: 12px; border-radius: 8px; margin-bottom: 15px; line-height: 1.6;">
+                            • <strong>년주 (庚午)</strong>: 庚(金) + 午(火)<br>
+                            • <strong>월주 (己丑)</strong>: 己(土) + 丑(土)<br>
+                            • <strong>일주 (丙寅)</strong>: 丙(火) + 寅(木)<br>
+                            • <strong>시주 (戊子)</strong>: 戊(土) + 子(水)
+                        </div>
+
+                        <span style="font-size: 0.9rem; color: #8b949e; line-height: 1.6;">
+                            이 8개 글자의 오행 속성을 각각 카운팅하면 아래와 같은 최종 분포 결과가 나옵니다.
+                        </span>
+
+                        <ul class="pillar-desc-list" style="margin-top: 10px;">
+                            <li class="pillar-desc-item">
+                                <span class="pillar-tag"
+                                    style="background: rgba(74, 222, 128, 0.1); color: #4ade80; min-width: 90px;">木 (목 /
+                                    나무)</span>
+                                <span>➔ <strong>寅</strong> (총 1개)</span>
+                            </li>
+                            <li class="pillar-desc-item">
+                                <span class="pillar-tag"
+                                    style="background: rgba(248, 113, 113, 0.1); color: #f87171; min-width: 90px;">火 (화
+                                    / 불)</span>
+                                <span>➔ <strong>丙, 午</strong> (총 2개)</span>
+                            </li>
+                            <li class="pillar-desc-item">
+                                <span class="pillar-tag"
+                                    style="background: rgba(251, 191, 36, 0.1); color: #fbbf24; min-width: 90px;">土 (토 /
+                                    흙)</span>
+                                <span>➔ <strong>己, 丑, 戊</strong> (총 3개)</span>
+                            </li>
+                            <li class="pillar-desc-item">
+                                <span class="pillar-tag"
+                                    style="background: rgba(228, 228, 231, 0.1); color: #e4e4e7; min-width: 90px;">金 (금
+                                    / 쇠)</span>
+                                <span>➔ <strong>庚</strong> (총 1개)</span>
+                            </li>
+                            <li class="pillar-desc-item">
+                                <span class="pillar-tag"
+                                    style="background: rgba(96, 165, 250, 0.1); color: #60a5fa; min-width: 90px;">水 (수 /
+                                    물)</span>
+                                <span>➔ <strong>子</strong> (총 1개)</span>
+                            </li>
+                        </ul>
+                        <span
+                            style="font-size: 0.85rem; color: #8b949e; display: block; margin-top: 10px; line-height: 1.5;">
+                            ※ 만세력 계산기는 이처럼 8글자의 오행 분포 비율을 산출하여, 어떤 기운이 부족하고(결핍) 어떤 기운이 넘치는지(과다) 확인하는 기초 참고 데이터로 제공합니다.
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6번 카드 -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="number">4</span>
+                    <span class="title">시간 영역 파티셔닝 (Life Cycle Partitioning)</span>
+                </div>
+                <div class="formula">Pillars = { Year, Month, Day, Hour }</div>
+                <div class="description">태어난 년(年), 월(月), 일(日), 시(時)의 4개 기둥(사주)은 인생의 생애주기적 흐름과 다양한 사회적 관계망을 네 가지 주요 파티션으로
+                    분할한 것입니다.</div>
+                <div class="nuance">
+                    <strong>[해석]</strong> 청년이라면 월주, 장년기라면 일주가 가장 중요합니다. 어릴 때 어땠네~ 하는 이야기는 년주를 보고 이야기하는 것입니다.
+                    앞서 이야기 한 사주의 경우의 수는 518,400개입니다. 하지만 나이별 각 주가 가장 중심입니다. (예를 들어 40~60대라면 일주가 가장 중요합니다 인터넷, 유튜브 등에
+                    '기축일주' 이런식으로 검색하시면 자세한 내용을 확인하실 수 있습니다.)
+                    <ul class="pillar-desc-list">
+                        <li class="pillar-desc-item">
+                            <span class="pillar-tag">년주 (年柱)</span>
+                            <span><strong>초년기 (0~20세)</strong> / 근본적 내면 바탕, 조상·국가적 환경, 가문 배경</span>
+                        </li>
+                        <li class="pillar-desc-item">
+                            <span class="pillar-tag">월주 (月柱)</span>
+                            <span><strong>청년기 (20~40세)</strong> / 사회적 직업 활동, 부모·형제와의 인연, 사회적 행동 패턴</span>
+                        </li>
+                        <li class="pillar-desc-item">
+                            <span class="pillar-tag">일주 (日柱)</span>
+                            <span><strong>장년기 (40~60세)</strong> / 본인 고유 기질(일간), 내밀한 성격, 배우자와의 관계</span>
+                        </li>
+                        <li class="pillar-desc-item">
+                            <span class="pillar-tag">시주 (時柱)</span>
+                            <span><strong>말년기 (60세 이후)</strong> / 미래의 결실과 자녀, 비밀스러운 내면의 욕구 및 말년의 성취</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 7번 카드 -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="number">if</span>
+                    <span class="title">관계성 기반 패턴 매칭 (Pattern Matching)</span>
+                </div>
+                <div class="formula">if (Relation(Branch_A, Branch_B) == TRUE) trigger(Sal)</div>
+                <div class="description">역마살, 도화살, 화개살 등 사주에서 말하는 수많은 '살(煞)'은 사주 원국의 8글자와 흘러가는 시간(대운, 세운) 사이의 특정 관계성(충,
+                    합, 형 등)을 감지하는 메커니즘입니다.</div>
+                <div class="nuance">
+                    <strong>[해석]</strong> 사주의 특정 글자 간 조합이 일치할 때 이를 매칭하여 표현하는 <strong>간단한 조건부 패턴 매칭
+                        규칙</strong>입니다.
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed rgba(255, 255, 255, 0.1);">
+                        <strong style="color: #ff7b72; display: block; margin-bottom: 8px;">💡 [실제 작동 예시] 역마살(驛馬煞)은 어떻게
+                            판정될까요?</strong>
+                        <span style="font-size: 0.9rem; color: #8b949e; line-height: 1.6;">
+                            역마살은 태어난 날(일지)이나 해(연지)의 동물 글자와 사주 내 다른 위치의 동물 글자가 <strong>서로 정반대 방향(180도)에서 강하게 충돌하는 운동 에너지
+                                조합</strong>일 때 발생합니다.
+                        </span>
+                        <ul class="pillar-desc-list" style="margin-top: 10px;">
+                            <li class="pillar-desc-item">
+                                <span class="pillar-tag"
+                                    style="background: rgba(88, 166, 255, 0.1); color: #58a6ff; min-width: 120px;">申·子·辰
+                                    (원숭이·쥐·용)</span>
+                                <span>➔ 사주에 <strong>寅 (호랑이)</strong>이 있으면 역마살 작동</span>
+                            </li>
+                            <li class="pillar-desc-item">
+                                <span class="pillar-tag"
+                                    style="background: rgba(88, 166, 255, 0.1); color: #58a6ff; min-width: 120px;">寅·午·戌
+                                    (호랑이·말·개)</span>
+                                <span>➔ 사주에 <strong>申 (원숭이)</strong>이 있으면 역마살 작동</span>
+                            </li>
+                            <li class="pillar-desc-item">
+                                <span class="pillar-tag"
+                                    style="background: rgba(88, 166, 255, 0.1); color: #58a6ff; min-width: 120px;">巳·酉·丑
+                                    (뱀·닭·소)</span>
+                                <span>➔ 사주에 <strong>亥 (돼지)</strong>가 있으면 역마살 작동</span>
+                            </li>
+                            <li class="pillar-desc-item">
+                                <span class="pillar-tag"
+                                    style="background: rgba(88, 166, 255, 0.1); color: #58a6ff; min-width: 120px;">亥·卯·未
+                                    (돼지·토끼·양)</span>
+                                <span>➔ 사주에 <strong>巳 (뱀)</strong>가 있으면 역마살 작동</span>
+                            </li>
+                        </ul>
+                        <span
+                            style="font-size: 0.85rem; color: #8b949e; display: block; margin-top: 10px; line-height: 1.5;">
+                            ※ 프로그래밍 조건문으로 치환하면
+                            <code>if (day_branch === '寅' && hour_branch === '申') { active_sal('역마살'); }</code>과 완전히 같은
+                            동작 메커니즘입니다.
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8번 카드 -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="number">10</span>
+                    <span class="title">대운(大運) - 10년 주기 환경의 비례식 산출 (Scaling Function)</span>
+                </div>
+                <div class="formula">대운수 = (생일 ~ 절입일 간의 날짜 수) ÷ 3</div>
+                <div class="description">사주에서 대운(大運)은 평생 동안 10년 단위로 바뀌는 삶의 거시적인 환경 변수를 뜻합니다. 이 대운이 인생에서 언제
+                    교체되고(대운수), 어떤 방향(순행/역행)으로 흐를지는 철저한 시간 축 비례 연산에 의해 수학적으로 결정됩니다.</div>
+                <div class="nuance">
+                    <strong>[해석]</strong> 지구가 공전하면서 계절이 바뀌는 주기(한 달, 약 30일)를 10년이라는
+                    시간의 비율에 맞춰 단순 환산하는 결괏값입니다. <strong>즉, 시간 환산 공식상 '3일 = 1년'의 비례식</strong>으로 계산됩니다.
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed rgba(255, 255, 255, 0.1);">
+                        <strong style="color: #ff7b72; display: block; margin-bottom: 8px;">💡 [실제 대운 계산
+                            예시]</strong>
+                        <ul class="pillar-desc-list" style="margin-top: 10px;">
+                            <li class="pillar-desc-item">
+                                <span class="pillar-tag"
+                                    style="background: rgba(168, 85, 247, 0.1); color: #d8b4fe; min-width: 120px;">1단계:
+                                    흐름의 방향</span>
+                                <span>태어난 해의 천간이 양(陽)의 기운인 남성이거나, 음(陰)의 기운인 여성은 <strong>순행(정방향)</strong>으로 흐르고,
+                                    그 반대는 <strong>역행(역방향)</strong>으로 시간이 흐릅니다.</span>
+                            </li>
+                            <li class="pillar-desc-item">
+                                <span class="pillar-tag"
+                                    style="background: rgba(168, 85, 247, 0.1); color: #d8b4fe; min-width: 120px;">2단계:
+                                    간격 일수 구하기</span>
+                                <span>내가 태어난 날부터 절기(순행이면 다음 절기, 역행이면 이전 절기)가 시작되는 날까지 며칠인지 계산합니다. 만약 날짜 간격이
+                                    <strong>9일</strong>이 나왔다면?</span>
+                            </li>
+                            <li class="pillar-desc-item">
+                                <span class="pillar-tag"
+                                    style="background: rgba(168, 85, 247, 0.1); color: #d8b4fe; min-width: 120px;">3단계:
+                                    대운수 공식 대입</span>
+                                <span>구한 일수를 3으로 나눕니다. <code>9 ÷ 3 = 3</code>이 나오므로 이 사람의 대운수 상수는
+                                    <strong>3</strong>이 됩니다. 결과적으로 이 사람은 만 3세, 13세, 23세, 33세... 마다 정확히 10년 단위로
+                                    삶의 대운(환경)이 변화하게 됩니다. (나머지 일수는 소수점 연산을 거쳐 반올림합니다.)</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 수학적 및 AI 안내 섹션 -->
+        <div class="info-section">
+            <h2 class="info-section-title">📐 수학적 팩트 체크와 생성형 AI 활용법</h2>
+
+            <div class="info-box">
+                <h3>📊 1. 사주의 수학적 주기 계산</h3>
+                <p>사주 만세력은 생년월일시라는 시간 좌표를 60갑자 기호 체계로 치환하는 <strong>수학적 주기 함수 모델링</strong>의 결과입니다. 사주는 2시간 단위로
+                    교체되므로, 하루에 단 12개의 사주팔자만이 존재합니다.</p>
+                <p>이를 연간 약 25만 명이 태어나는 대한민국 기준으로 계산해 보면, 나와 완전히 똑같은 사주팔자를 공유하며 태어난 사람이 <strong>동일 해 출생아 중 평균 약
+                        60여 명</strong> 존재하며, 전 세계적으로는 <strong>약 3만 명</strong>에 달합니다. 사주가 개인의 운명을 절대적으로 결정짓는
+                    예언서라기보다, 특정 시간대마다 반복되어 나타나는 시간 표기 체계라는 수학적 사실을 보여줍니다.</p>
+            </div>
+
+            <div class="info-box warning">
+                <h3>🤖 2. 생성형 AI 모델의 연산 오류와 극복법</h3>
+                <p>최근 ChatGPT, Claude, Gemini 등 대형 언어 모델(LLM)을 사주 해석에 활용하는 경우가 늘고 있습니다. 하지만 이들 AI는 언어적 확률 모델로
+                    작동하기 때문에 음양력 변환, 24절기 정확한 입절 시각 계산, 지장간 및 간지 산출 등 <strong>정밀한 만세력 역학 수학 연산 과정에서 왜곡과
+                        환각(Hallucination) 오류</strong>를 빈번히 일으킵니다.</p>
+                <p>따라서, 반드시 <strong>사주킹</strong>처럼 검증된 수학적 역법 계산기로 정확한 만세력 데이터를 먼저 뽑아낸 뒤, 그 데이터를 복사하여 AI에게 풀이와
+                    조언을 물어보는 방식을 추천합니다. AI가 풀어주는 사주 결과 중 <strong>나에게 힘이 되는 좋은 조언과 격려만을 믿고, 긍정적인 방향으로 미래를 개척하는
+                        주도적인 태도</strong>를 지니시길 권장합니다.</p>
+            </div>
+        </div>
+
+        <footer>
+            <div class="conclusion" style="margin-bottom: 20px;">
+                결론적으로 사주명리학은 신비주의의 영역이 아닙니다. 유한한 기호와 숫자를 활용하여 시간의 흐름을 기록하고 이를 인생의 길잡이로 삼고자 했던 <strong>체계적인 문화적
+                    시도</strong>입니다. 사주팔자에 적힌 글자들은 당신의 미래를 결정하는 예언이 아니며, 정해진 역법 공식에 따라 <strong>드라이하게 계산되어 도출된 시간의
+                    기호 표기</strong>에 불과합니다. 좋은 것만 참고하여 삶을 긍정적인 방향으로 개척해 나가세요.
+            </div>
+            <div
+                style="font-size: 0.9rem; color: var(--text-muted); padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.08); display: inline-block; width: 100%;">
+                작성자 : 킹수학 제작자 킹선생
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const HEAVENLY_STEMS = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+        const EARTHLY_BRANCHES = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+
+        const KOREAN_PRONUNCIATION = {
+            '甲': '갑', '乙': '을', '丙': '병', '丁': '정', '戊': '무',
+            '己': '기', '庚': '경', '辛': '신', '壬': '임', '癸': '계',
+            '子': '자', '丑': '축', '寅': '인', '卯': '묘', '辰': '진',
+            '巳': '사', '午': '오', '未': '미', '申': '신', '酉': '유',
+            '戌': '술', '亥': '해'
+        };
+
+        function parseTermTime(str) {
+            const y = parseInt(str.substring(0, 4));
+            const m = parseInt(str.substring(4, 6)) - 1;
+            const d = parseInt(str.substring(6, 8));
+            const h = parseInt(str.substring(8, 10));
+            const min = parseInt(str.substring(10, 12));
+            return new Date(y, m, d, h, min);
+        }
+
+        function getPreviousMonthPillar(rows, idx) {
+            const currentPillar = rows[idx].month_pillar;
+            for (let i = idx - 1; i >= 0; i--) {
+                if (rows[i].month_pillar !== currentPillar) {
+                    return rows[i].month_pillar;
+                }
+            }
+            return currentPillar;
+        }
+
+        function getHourBranch(hour, minute) {
+            const timeVal = hour + minute / 60.0;
+            if (timeVal < 1.0 || timeVal >= 23.0) return '子';
+            if (timeVal >= 1.0 && timeVal < 3.0) return '丑';
+            if (timeVal >= 3.0 && timeVal < 5.0) return '寅';
+            if (timeVal >= 5.0 && timeVal < 7.0) return '卯';
+            if (timeVal >= 7.0 && timeVal < 9.0) return '辰';
+            if (timeVal >= 9.0 && timeVal < 11.0) return '巳';
+            if (timeVal >= 11.0 && timeVal < 13.0) return '午';
+            if (timeVal >= 13.0 && timeVal < 15.0) return '未';
+            if (timeVal >= 15.0 && timeVal < 17.0) return '申';
+            if (timeVal >= 17.0 && timeVal < 19.0) return '酉';
+            if (timeVal >= 19.0 && timeVal < 21.0) return '戌';
+            if (timeVal >= 21.0 && timeVal < 23.0) return '亥';
+            return '子';
+        }
+
+        function getHourStem(dayStem, hourBranch) {
+            const dayStemToStart = {
+                '甲': 0, '己': 0,
+                '乙': 2, '庚': 2,
+                '丙': 4, '辛': 4,
+                '丁': 6, '壬': 6,
+                '戊': 8, '癸': 8
+            };
+            const startIdx = dayStemToStart[dayStem] || 0;
+            const branchIdx = EARTHLY_BRANCHES.indexOf(hourBranch);
+            const stemIdx = (startIdx + branchIdx) % 10;
+            return HEAVENLY_STEMS[stemIdx];
+        }
+
+        async function calculateCurrentSaju() {
+            try {
+                const response = await fetch('calendar_data.txt');
+                if (!response.ok) return;
+                const csvText = await response.text();
+                const lines = csvText.split('\n');
+
+                const sajuRows = [];
+                const sajuDb = {};
+
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+                    const parts = line.split(',');
+                    const row = {
+                        year: parseInt(parts[0]),
+                        month: parseInt(parts[1]),
+                        day: parseInt(parts[2]),
+                        year_pillar: parts[3],
+                        month_pillar: parts[4],
+                        day_pillar: parts[5],
+                        solar_term_hanja: parts[9] || null,
+                        solar_term_korean: parts[10] || null,
+                        term_time: parts[11] || null
+                    };
+                    sajuRows.push(row);
+                    sajuDb[`${row.year}-${row.month}-${row.day}`] = row;
+                }
+
+                // 현재 시간 구하기 (로딩 타임 1회 실행)
+                const now = new Date();
+                const curYear = now.getFullYear();
+                const curMonth = now.getMonth() + 1;
+                const curDay = now.getDate();
+                const curHour = now.getHours();
+                const curMin = now.getMinutes();
+
+                const dateKey = `${curYear}-${curMonth}-${curDay}`;
+                const coreRow = sajuDb[dateKey];
+                if (!coreRow) return;
+
+                let yearPillar = coreRow.year_pillar;
+                let monthPillar = coreRow.month_pillar;
+                let dayPillar = coreRow.day_pillar;
+
+                // 월주 및 년주 절기 보정
+                const MONTHLY_TERMS = ['立春', '驚蟄', '淸明', '立夏', '芒종', '芒種', '小暑', '立秋', '白露', '寒露', '立冬', '大雪', '小寒'];
+                if (coreRow.term_time && coreRow.term_time.trim() !== '' && (MONTHLY_TERMS.includes(coreRow.solar_term_hanja) || coreRow.solar_term_hanja === '芒種')) {
+                    const termDateTime = parseTermTime(coreRow.term_time);
+                    if (now < termDateTime) {
+                        const currentIndex = sajuRows.findIndex(r => r.year === curYear && r.month === curMonth && r.day === curDay);
+                        monthPillar = getPreviousMonthPillar(sajuRows, currentIndex);
+                        if (coreRow.solar_term_hanja === '立春') {
+                            if (currentIndex > 0) {
+                                yearPillar = sajuRows[currentIndex - 1].year_pillar;
+                            }
+                        }
+                    }
+                }
+
+                // 시주 계산
+                const dayStemForHour = dayPillar[0];
+                const hourBranch = getHourBranch(curHour, curMin);
+                const hourStem = getHourStem(dayStemForHour, hourBranch);
+                const hourPillar = hourStem + hourBranch;
+
+                // 포맷팅 함수
+                const fmt = (p) => `${p[0]}(${KOREAN_PRONUNCIATION[p[0]]})${p[1]}(${KOREAN_PRONUNCIATION[p[1]]})`;
+
+                const formatYear = fmt(yearPillar);
+                const formatMonth = fmt(monthPillar);
+                const formatDay = fmt(dayPillar);
+                const formatHour = fmt(hourPillar);
+
+                document.getElementById('sajuBoxTime').textContent = `${curYear}년 ${curMonth}월 ${curDay}일 ${curHour}시 ${String(curMin).padStart(2, '0')}분 현재`;
+                document.getElementById('sajuBoxPillars').innerHTML = `
+            ${formatYear}년 &nbsp;${formatMonth}월 &nbsp;${formatDay}일 &nbsp;${formatHour}시
+        `;
+                document.getElementById('currentSajuBox').style.display = 'block';
+
+            } catch (err) {
+                console.error("실시간 사주 계산 오류:", err);
+            }
+        }
+
+        calculateCurrentSaju();
+    </script>
+</body>
+
+</html>
